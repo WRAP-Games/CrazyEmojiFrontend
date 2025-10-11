@@ -1,0 +1,39 @@
+.crazy-emoji-sidebar-navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px;
+    padding: 22px;
+    border-radius: 25px;
+    background: var(--crazy-emoji-background-secondary);
+    .page-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        font-size: 32px;
+        color: var(--crazy-emoji-text-primary);
+        cursor: pointer;
+    }
+    .sidebar-btns {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        overflow: auto;
+        .sidebar-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 22px;
+            font-size: 20px;
+            color: var(--crazy-emoji-text-primary);
+            transition: color .1s ease-in-out;
+            cursor: pointer;
+            &:hover {
+                color: var(--crazy-emoji-btn-background);
+            }
+        }
+    }
+}

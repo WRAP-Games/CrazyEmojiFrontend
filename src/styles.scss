@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+    border: 0;
+    margin: 0;
+    padding: 0;
+
+    --crazy-emoji-background-primary: #61272D;
+    --crazy-emoji-background-secondary: #361617;
+
+    --crazy-emoji-text-primary: #FFFFFF;
+    --crazy-emoji-text-secondary: #A6525B;
+    --crazy-emoji-text-secondary-hover: #b1616a;
+    --crazy-emoji-text-font-family: "Poppins", "Helvetica Neue", Helvetica, Arial, "Segoe UI", sans-serif;
+
+    --crazy-emoji-btn-background: #C03D3C;
+
+    --crazy-emoji-profile-online: #87BD6E;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}

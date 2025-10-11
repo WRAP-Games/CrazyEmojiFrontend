@@ -1,0 +1,21 @@
+.crazy-emoji-category-widget {
+    display: flex;
+    align-items: flex-end;
+    width: 220px;
+    height: 220px;
+    border-radius: 25px;
+    padding: 15px;
+    background-image: url('/categories/category1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    .crazy-emoji-category-widget-name {
+        font-family: var(--crazy-emoji-text-font-family);
+        font-weight: 600;
+        font-size: 27px;
+        line-height: 25px;
+        color: var(--crazy-emoji-text-primary);
+        text-shadow: 2px 0px 10px #000000;
+    }
+}
