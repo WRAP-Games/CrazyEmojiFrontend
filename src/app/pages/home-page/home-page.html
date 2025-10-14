@@ -4,31 +4,12 @@
             <span class="home-page-block-header-title">Categories</span>
             <span class="home-page-block-header-subtitle">See more</span>
         </div>
-        <div class="category-widgets">
-            <app-category-widget
-                [name]="'Movies'"
-                [description]="''" 
-            ></app-category-widget>
-            <app-category-widget
-                [name]="'TV Shows'"
-                [description]="''" 
-            ></app-category-widget>
-            <app-category-widget
-                [name]="'Songs'"
-                [description]="''" 
-            ></app-category-widget>
-            <app-category-widget
-                [name]="'Books'"
-                [description]="''" 
-            ></app-category-widget>
-            <app-category-widget
-                [name]="'Characters'"
-                [description]="''" 
-            ></app-category-widget>
-            <app-category-widget
-                [name]="'Video Games'"
-                [description]="''" 
-            ></app-category-widget>
+        <div class="category-widgets overflow">
+            @for (category of categories; track category) {
+                <app-category-widget
+                    [category]="category"
+                ></app-category-widget>
+            }
         </div>
     </div>
 </div>

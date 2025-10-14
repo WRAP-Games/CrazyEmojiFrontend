@@ -19,6 +19,7 @@
         flex-direction: column;
         width: 100%;
         height: 100%;
+        overflow: hidden;
         .crazy-emoji-navbar {
             display: flex;
             flex-direction: row;
@@ -59,7 +60,7 @@
                         border-radius: 100%;
                         transition: background .1s ease-in;
                         &:hover {
-                            background: var(--crazy-emoji-btn-background);
+                            background: var(--crazy-emoji-btn-primary-background);
                         }
                         .navbar-btn-icon {
                             color: var(--crazy-emoji-text-primary);

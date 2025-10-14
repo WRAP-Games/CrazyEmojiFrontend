@@ -1,0 +1,23 @@
+<button
+    class="crazy-emoji-btn"
+    [disabled]="disabled"
+    [class]="[color, size, type, corners]"
+    [class.icon-only]="icon && !text"
+    (click)="onClickEvent()">
+    @if (icon && !text) {
+        <div class="crazy-emoji-btn-icon">
+            <i [class]="icon"></i>
+        </div>
+    }
+    @else {
+        @if (icon && iconPosition === ButtonIconPosition.Left) {
+            <i [class]="icon"></i>
+        }
+        @if (text) {
+            {{ text }}
+        }
+        @if (icon && iconPosition === ButtonIconPosition.Right) {
+            <i [class]="icon"></i>
+        }
+    }
+</button>

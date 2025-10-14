@@ -1,21 +1,79 @@
 .crazy-emoji-category-widget {
     display: flex;
     align-items: flex-end;
+    position: relative;
     width: 220px;
     height: 220px;
     border-radius: 25px;
     padding: 15px;
-    background-image: url('/categories/category1.jpg');
+    z-index: 0;
+    background-image: var(--background-image);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     box-sizing: border-box;
-    .crazy-emoji-category-widget-name {
-        font-family: var(--crazy-emoji-text-font-family);
-        font-weight: 600;
-        font-size: 27px;
-        line-height: 25px;
-        color: var(--crazy-emoji-text-primary);
-        text-shadow: 2px 0px 10px #000000;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        background: linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, .6));
+    }
+    &:hover {
+        .crazy-emoji-category-widget-text > .crazy-emoji-category-widget-description {
+            height: fit-content;
+        }
+        .crazy-emoji-category-widget-btns {
+            opacity: 1;
+            pointer-events: all;
+        }
+        &::before {
+            background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .8));
+        }
+    }
+    .crazy-emoji-category-widget-btns {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        right: 15px;
+        z-index: 2;
+        opacity: 0;
+        pointer-events: none;
+    }
+    .crazy-emoji-category-widget-text {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        width: 100%;
+        max-height: 100%;
+        z-index: 2;
+        .crazy-emoji-category-widget-name {
+            width: 100%;
+            font-family: var(--crazy-emoji-text-font-family);
+            font-weight: 600;
+            font-size: 27px;
+            line-height: 35px;
+            color: var(--crazy-emoji-text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .crazy-emoji-category-widget-description {
+            width: 100%;
+            height: 0;
+            font-family: var(--crazy-emoji-text-font-family);
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 16px;
+            color: var(--crazy-emoji-text-primary);
+            overflow: hidden;
+        }
     }
 }

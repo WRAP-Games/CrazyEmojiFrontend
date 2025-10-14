@@ -1,3 +1,15 @@
-<div class="crazy-emoji-category-widget">
-    <span class="crazy-emoji-category-widget-name">{{ name }}</span>
+<div
+    class="crazy-emoji-category-widget"
+    [style.--background-image]="'url(' + category.image + ')'">
+    <div class="crazy-emoji-category-widget-btns">
+        <app-button
+            [icon]="'fa-solid fa-play'"
+            [size]="ButtonSize.Small"
+            (onClick)="onCreateRoomClick()">
+        </app-button>
+    </div>
+    <div class="crazy-emoji-category-widget-text">
+        <span class="crazy-emoji-category-widget-name">{{ category.name }}</span>
+        <span class="crazy-emoji-category-widget-description">{{ category.description }}</span>
+    </div>
 </div>

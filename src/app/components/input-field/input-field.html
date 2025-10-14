@@ -1,0 +1,35 @@
+<div
+    class="crazy-emoji-input-field-container"
+    [class.disabled]="disabled">
+    @if (title) {
+        <span class="crazy-emoji-input-field-title">{{ title }}</span>
+    }
+    <div
+        class="crazy-emoji-input-field"
+        [class.error]="error"
+        [class]="color"
+        tabindex="0">
+        <div class="crazy-emoji-input-field-icons">
+            @for (icon of leftSideIcons; track icon) {
+                <i [class]="icon.icon"></i>
+            }
+        </div>
+        <input
+            type="text"
+            [disabled]="disabled"
+            [required]="required"
+            [attr.value]="value"
+            [attr.minLength]="minlength"
+            [attr.maxLength]="maxlength"
+            [attr.placeholder]="placeholder"
+            [style.--line-height.px]="lineHeight"/>
+        <div class="crazy-emoji-input-field-icons">
+            @for (icon of rightSideIcons; track icon) {
+                <i [class]="icon.icon"></i>
+            }
+        </div>
+    </div>
+    @if (subtitle) {
+        <span class="crazy-emoji-input-field-subtitle">{{ subtitle }}</span>
+    }
+</div>

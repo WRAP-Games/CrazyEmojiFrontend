@@ -1,0 +1,87 @@
+:host {
+    width: 100%;
+}
+
+.crazy-emoji-input-field-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    &.disabled {
+        opacity: .5;
+        pointer-events: none;
+    }
+    .crazy-emoji-input-field-title {
+        font-family: var(--crazy-emoji-text-font-family);
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 23px;
+        width: 100%;
+        margin-bottom: 6px;
+        color: var(--crazy-emoji-text-primary);
+    }
+    .crazy-emoji-input-field-subtitle {
+        font-family: var(--crazy-emoji-text-font-family);
+        font-weight: 500;
+        font-size: 11px;
+        line-height: 27px;
+        width: 100%;
+        margin-top: 4px;
+        color: var(--crazy-emoji-text-primary);
+    }
+    .crazy-emoji-input-field {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0px 3px 7px 0px #00000040;
+        transition: all .2s ease-in-out;
+        &.primary {
+            background: #8E6568;
+            &:hover {
+                background: #775254;
+            }
+            &:focus, &:focus-visible {
+                box-shadow: 0px 0px 10px 0px #8E6568;
+            }
+        }
+        &.secondary {
+            background: #61272D;
+            &:hover {
+                background: #552228;
+            }
+            &:focus, &:focus-visible {
+                box-shadow: 0px 0px 10px 0px #61272D;
+            }
+        }
+        &.error {
+            background: #C14750;
+        }
+        &:focus, &:focus-visible {
+            outline: none;
+        }
+        input {
+            font-family: var(--crazy-emoji-text-font-family);
+            font-weight: 500;
+            font-size: 14px;
+            line-height: var(--line-height);
+            width: 100%;
+            border: 0;
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            color: var(--crazy-emoji-text-primary);
+            &:focus, &:focus-visible {
+                outline: none;
+            }
+        }
+        .crazy-emoji-input-field-icons {
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            height: 100%;
+            font-size: 23px;
+            color: var(--crazy-emoji-text-primary);
+        }
+    }
+}

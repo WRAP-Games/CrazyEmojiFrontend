@@ -1,0 +1,20 @@
+<div class="crazy-emoji-number-selector">
+    @if (title) {
+        <span class="crazy-emoji-number-selector-title">{{ title }}</span>
+    }
+    <div class="crazy-emoji-number-selector-contents">
+        <app-button
+            [icon]="'fa-solid fa-minus'"
+            [size]="ButtonSize.Small"
+            (onClick)="decreaseValue()">
+        </app-button>
+        <div class="crazy-emoji-number-selector-value">
+            <span class="crazy-emoji-number-selector-value-text">{{ value }}</span>
+        </div>
+        <app-button
+            [icon]="'fa-solid fa-plus'"
+            [size]="ButtonSize.Small"
+            (onClick)="increaseValue()">
+        </app-button>
+    </div>
+</div>
