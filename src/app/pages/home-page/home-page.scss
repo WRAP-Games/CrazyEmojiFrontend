@@ -32,37 +32,12 @@
                 font-size: 15px;
                 line-height: 17px;
                 color: var(--crazy-emoji-text-secondary);
+                text-decoration: none;
                 cursor: pointer;
                 transition: color .15s ease-in-out;
                 &:hover {
                     color: var(--crazy-emoji-text-secondary-hover);
                 }
-            }
-        }
-        .category-widgets {
-            display: flex;
-            flex-direction: row;
-            position: relative;
-            gap: 30px;
-            width: 100%;
-            padding-bottom: 20px;
-            overflow: hidden;
-            &.overflow::after {
-                position: absolute;
-                content: "";
-                top: 0;
-                bottom: 0;
-                right: 0;
-                width: 200px;
-                z-index: 3;
-                background: linear-gradient(
-                    to right,
-                    transparent 0%,
-                    rgb(from var(--crazy-emoji-background-primary) r g b / 0.4) 20%,
-                    rgb(from var(--crazy-emoji-background-primary) r g b / 0.6) 40%,
-                    rgb(from var(--crazy-emoji-background-primary) r g b / 0.8) 60%,
-                    var(--crazy-emoji-background-primary) 100%
-                );
             }
         }
     }

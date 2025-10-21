@@ -1,0 +1,21 @@
+.crazy-emoji-profile-img-wrapper {
+    position: relative;
+    width: var(--profile-img-size);
+    height: var(--profile-img-size);
+    &.online::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 10px;
+        height: 10px;
+        background: var(--crazy-emoji-profile-online);
+        border-radius: 100%;
+        border: 2px solid var(--crazy-emoji-background-secondary);
+    }
+    .crazy-emoji-profile-img {
+        width: var(--profile-img-size);
+        height: var(--profile-img-size);
+        border-radius: 100%;
+    }
+}

@@ -1,0 +1,31 @@
+<div class="crazy-emoji-waiting-room">
+    <div class="crazy-emoji-waiting-room-header">
+        <div class="crazy-emoji-waiting-room-header-code">
+            <div class="crazy-emoji-waiting-room-header-code-title">
+                <span class="crazy-emoji-waiting-room-header-code-title-text">Join the room by entering</span>
+                <span class="crazy-emoji-waiting-room-header-code-title-text-code">Game PIN:</span>
+            </div>
+            <span class="crazy-emoji-waiting-room-header-code-text">{{ room?.pinCode }}</span>
+        </div>
+        <div class="crazy-emoji-waiting-room-header-details">
+            <div class="crazy-emoji-waiting-room-header-details-row">
+                <span class="crazy-emoji-waiting-room-header-details-row-text secondary">Categories:</span>
+                <span class="crazy-emoji-waiting-room-header-details-row-text primary">{{ room?.category?.name }}</span>
+            </div>
+            <div class="crazy-emoji-waiting-room-header-details-row">
+                <span class="crazy-emoji-waiting-room-header-details-row-text secondary">Rounds:</span>
+                <span class="crazy-emoji-waiting-room-header-details-row-text primary">{{ room?.rounds }}</span>
+            </div>
+            <div class="crazy-emoji-waiting-room-header-details-row">
+                <span class="crazy-emoji-waiting-room-header-details-row-text secondary">Time Per Round:</span>
+                <span class="crazy-emoji-waiting-room-header-details-row-text primary">{{ room?.roundDuration }}</span>
+            </div>
+            <div class="crazy-emoji-waiting-room-header-details-row">
+                <span class="crazy-emoji-waiting-room-header-details-row-text secondary">Room Creator:</span>
+                <span class="crazy-emoji-waiting-room-header-details-row-text primary">{{ room?.creator?.firstName }} {{ room?.creator?.lastName }}</span>
+            </div>
+        </div>
+    </div>
+    <span class="crazy-emoji-waiting-room-title">{{ room?.name }}</span>
+    <div class="crazy-emoji-waiting-room-joined-users"></div>
+</div>

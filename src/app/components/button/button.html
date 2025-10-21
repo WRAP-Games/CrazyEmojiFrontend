@@ -6,18 +6,18 @@
     (click)="onClickEvent()">
     @if (icon && !text) {
         <div class="crazy-emoji-btn-icon">
-            <i [class]="icon"></i>
+            <i [class]="icon.icon"></i>
         </div>
     }
     @else {
-        @if (icon && iconPosition === ButtonIconPosition.Left) {
-            <i [class]="icon"></i>
+        @if (icon?.position === ComponentIconPosition.Left) {
+            <i [class]="icon?.icon"></i>
         }
         @if (text) {
             {{ text }}
         }
-        @if (icon && iconPosition === ButtonIconPosition.Right) {
-            <i [class]="icon"></i>
+        @if (icon?.position === ComponentIconPosition.Right) {
+            <i [class]="icon?.icon"></i>
         }
     }
 </button>

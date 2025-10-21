@@ -1,26 +1,8 @@
 <div class="crazy-emoji-sidebar-friends">
     <div class="friends-list hide-scrollbar">
-        <div class="profile-img-wrapper">
-            <img class="profile-img" src="/profiles/profile1.jpg"/>
-        </div>
-        <div class="profile-img-wrapper">
-            <img class="profile-img" src="/profiles/profile2.jpg"/>
-        </div>
-        <div class="profile-img-wrapper">
-            <img class="profile-img" src="/profiles/profile3.jpg"/>
-        </div>
-        <div class="profile-img-wrapper">
-            <img class="profile-img" src="/profiles/profile4.jpg"/>
-        </div>
-        <div class="profile-img-wrapper">
-            <img class="profile-img" src="/profiles/profile5.jpg"/>
-        </div>
-        <div class="profile-img-wrapper">
-            <img class="profile-img" src="/profiles/profile6.jpg"/>
-        </div>
-        <div class="profile-img-wrapper">
-            <img class="profile-img" src="/profiles/profile7.jpg"/>
-        </div>
+        @for (user of users; track user) {
+            <app-user-profile-img [user]="user" [size]="45"></app-user-profile-img>
+        }
     </div>
     <div class="sidebar-friends-btn">
         <i class="fa-solid fa-user-plus"></i>

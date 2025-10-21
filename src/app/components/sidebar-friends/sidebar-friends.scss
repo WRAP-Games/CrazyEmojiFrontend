@@ -20,27 +20,6 @@
         gap: 20px;
         height: 100%;
         overflow: auto;
-        .profile-img-wrapper {
-            position: relative;
-            width: 45px;
-            height: 45px;
-            &::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                right: 0;
-                width: 10px;
-                height: 10px;
-                background: var(--crazy-emoji-profile-online);
-                border-radius: 100%;
-                border: 2px solid var(--crazy-emoji-background-secondary);
-            }
-            .profile-img {
-                width: 45px;
-                height: 45px;
-                border-radius: 100%;
-            }
-        }
     }
     .sidebar-friends-btn {
         display: flex;

@@ -1,0 +1,7 @@
+<ng-scrollbar>
+    <div class="crazy-emoji-categories-list">
+        @for (category of categories; track category) {
+            <app-category-widget [category]="category"></app-category-widget>
+        }
+    </div>
+</ng-scrollbar>

@@ -9,11 +9,13 @@
         [class.error]="error"
         [class]="color"
         tabindex="0">
-        <div class="crazy-emoji-input-field-icons">
-            @for (icon of leftSideIcons; track icon) {
-                <i [class]="icon.icon"></i>
-            }
-        </div>
+        @if (leftSideIcons.length) {
+            <div class="crazy-emoji-input-field-icons">
+                @for (icon of leftSideIcons; track icon) {
+                    <i [class]="icon.icon"></i>
+                }
+            </div>
+        }
         <input
             type="text"
             [disabled]="disabled"
@@ -22,12 +24,15 @@
             [attr.minLength]="minlength"
             [attr.maxLength]="maxlength"
             [attr.placeholder]="placeholder"
-            [style.--line-height.px]="lineHeight"/>
-        <div class="crazy-emoji-input-field-icons">
-            @for (icon of rightSideIcons; track icon) {
-                <i [class]="icon.icon"></i>
-            }
-        </div>
+            [style.--line-height.px]="lineHeight"
+            (input)="valueChangeHandler($event)"/>
+        @if (rightSideIcons.length) {
+            <div class="crazy-emoji-input-field-icons">
+                @for (icon of rightSideIcons; track icon) {
+                    <i [class]="icon.icon"></i>
+                }
+            </div>
+        }
     </div>
     @if (subtitle) {
         <span class="crazy-emoji-input-field-subtitle">{{ subtitle }}</span>

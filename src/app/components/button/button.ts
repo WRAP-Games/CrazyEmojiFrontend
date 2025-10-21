@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ButtonColor, ButtonCorners, ComponentIconPosition, ButtonSize, ButtonType } from '../../../definitions';
+import { ButtonColor, ButtonCorners, ComponentIconPosition, ButtonSize, ButtonType, ComponentIcon } from '../../../definitions';
 
 @Component({
   selector: 'app-button',
@@ -9,8 +9,7 @@ import { ButtonColor, ButtonCorners, ComponentIconPosition, ButtonSize, ButtonTy
 })
 export class Button {
   @Input() text: string | null = null;
-  @Input() icon: string | null = null;
-  @Input() iconPosition: ComponentIconPosition = ComponentIconPosition.Left;
+  @Input() icon: ComponentIcon | null = null;
   @Input() color: ButtonColor = ButtonColor.Primary;
   @Input() size: ButtonSize = ButtonSize.Medium;
   @Input() type: ButtonType = ButtonType.Default;
@@ -19,7 +18,7 @@ export class Button {
   @Input() error: boolean = false;
   @Output() onClick: EventEmitter<void> = new EventEmitter<void>();
 
-  public ButtonIconPosition = ComponentIconPosition;
+  public ComponentIconPosition = ComponentIconPosition;
 
   onClickEvent():void {
     this.onClick.emit();

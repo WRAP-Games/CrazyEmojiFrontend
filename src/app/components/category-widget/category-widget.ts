@@ -1,6 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { Button } from "../button/button";
-import { ButtonSize, Category } from '../../../definitions';
+import { ButtonSize, Category, ComponentIcon, ComponentIconPosition } from '../../../definitions';
 import { RoomService } from '../../services/room-service';
 
 @Component({
@@ -13,6 +13,11 @@ export class CategoryWidget {
   @Input({ required: true }) category!: Category;
   public ButtonSize = ButtonSize;
   private roomService: RoomService = inject(RoomService);
+
+  readonly SelectCategoryBtnIcon: ComponentIcon = {
+    icon: 'fa-solid fa-play',
+    position: ComponentIconPosition.Left
+  };
 
   onCreateRoomClick():void {
     this.roomService.openCreateRoomDialog(this.category);

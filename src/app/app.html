@@ -1,7 +1,7 @@
 <div class="crazy-emoji-master">
   <div class="crazy-emoji-sidebar">
     <app-sidebar-navigation></app-sidebar-navigation>
-    <app-sidebar-friends></app-sidebar-friends>
+    <app-sidebar-friends [users]="users"></app-sidebar-friends>
   </div>
   <div class="crazy-emoji-main">
     <ngx-loading-bar
@@ -9,25 +9,7 @@
       [includeSpinner]="false"
       [height]="'10px'">
     </ngx-loading-bar>
-    <div class="crazy-emoji-navbar">
-      <div class="crazy-emoji-navbar__left-panel">
-        <span class="crazy-emoji-navbar-title">
-          {{ welcomeMessage }},
-          <span class="crazy-emoji-navbar-title-user-name">Vilius</span>
-        </span>
-      </div>
-      <div class="crazy-emoji-navbar__right-panel">
-        <div class="navbar-btns">
-          <div class="navbar-btn">
-            <i class="navbar-btn-icon fa-solid fa-right-from-bracket"></i>
-          </div>
-          <div class="navbar-btn">
-            <i class="navbar-btn-icon fa-solid fa-gear"></i>
-          </div>
-        </div>
-        <img class="profile-img" src="/profiles/profile.jpg"/>
-      </div>
-    </div>
+    <app-navbar></app-navbar>
     <div class="crazy-emoji-main-content">
       <router-outlet></router-outlet>
     </div>

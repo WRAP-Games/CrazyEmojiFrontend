@@ -1,0 +1,22 @@
+@if (contents !== null) {
+    <div class="crazy-emoji-navbar">
+        <div class="crazy-emoji-navbar__left-panel">
+            <div class="crazy-emoji-navbar-title">
+                @for (text of contents; track text) {
+                    <span class="crazy-emoji-navbar-title-text" [class]="text.color">{{ text.content }}</span>
+                }
+            </div>
+        </div>
+        <div class="crazy-emoji-navbar__right-panel">
+            <div class="navbar-btns">
+                <div class="navbar-btn">
+                    <i class="navbar-btn-icon fa-solid fa-right-from-bracket"></i>
+                </div>
+                <div class="navbar-btn">
+                    <i class="navbar-btn-icon fa-solid fa-gear"></i>
+                </div>
+            </div>
+            <app-user-profile-img [user]="currentUser" [size]="45" [showOnlineStatus]="false"></app-user-profile-img>
+        </div>
+    </div>
+}

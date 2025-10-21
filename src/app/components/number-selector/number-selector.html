@@ -4,7 +4,7 @@
     }
     <div class="crazy-emoji-number-selector-contents">
         <app-button
-            [icon]="'fa-solid fa-minus'"
+            [icon]="MinusButtonIcon"
             [size]="ButtonSize.Small"
             (onClick)="decreaseValue()">
         </app-button>
@@ -12,7 +12,7 @@
             <span class="crazy-emoji-number-selector-value-text">{{ value }}</span>
         </div>
         <app-button
-            [icon]="'fa-solid fa-plus'"
+            [icon]="PlusButtonIcon"
             [size]="ButtonSize.Small"
             (onClick)="increaseValue()">
         </app-button>

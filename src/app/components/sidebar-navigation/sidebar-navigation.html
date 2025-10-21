@@ -1,12 +1,12 @@
 <div class="crazy-emoji-sidebar-navigation">
-    <div class="page-logo">
+    <div class="page-logo" (click)="navigateToPage('')">
         <i class="fa-solid fa-icons"></i>
     </div>
     <div class="sidebar-btns hide-scrollbar">
-        <div class="sidebar-btn">
+        <div class="sidebar-btn" (click)="navigateToPage('')">
             <i class="fa-solid fa-house"></i>
         </div>
-        <div class="sidebar-btn">
+        <div class="sidebar-btn" (click)="navigateToPage('/categories')">
             <i class="fa-solid fa-gamepad"></i>
         </div>
         <div class="sidebar-btn">

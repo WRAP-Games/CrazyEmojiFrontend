@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ComponentIcon, ComponentIconPosition, InputFieldColor } from '../../../definitions';
 
 @Component({
@@ -20,6 +20,7 @@ export class InputField {
   @Input() minlength: number | null = null;
   @Input() maxlength: number | null = null;
   @Input() color: InputFieldColor = InputFieldColor.Primary;
+  @Output() onValueChange: EventEmitter<string> = new EventEmitter<string>();
 
   public leftSideIcons: ComponentIcon[] = [];
   public rightSideIcons: ComponentIcon[] = [];
@@ -29,5 +30,10 @@ export class InputField {
       if (icon.position === ComponentIconPosition.Left) this.leftSideIcons.push(icon);
       else if (icon.position === ComponentIconPosition.Right) this.rightSideIcons.push(icon);
     })
+  }
+
+  valueChangeHandler(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.onValueChange.emit(value);
   }
 }

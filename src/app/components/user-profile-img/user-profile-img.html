@@ -1,0 +1,6 @@
+<div
+    class="crazy-emoji-profile-img-wrapper"
+    [class.online]="showOnlineStatus && user.online"
+    [style.--profile-img-size.px]="size">
+    <img class="crazy-emoji-profile-img" [src]="user.profileImg"/>
+</div>

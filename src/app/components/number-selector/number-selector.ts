@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Button } from "../button/button";
-import { ButtonSize } from '../../../definitions';
+import { ButtonSize, ComponentIcon, ComponentIconPosition } from '../../../definitions';
 
 @Component({
   selector: 'app-number-selector',
@@ -14,17 +14,33 @@ export class NumberSelector {
   @Input() stepValue: number = 1;
   @Input() maxValue: number | null = null;
   @Input() minValue: number | null = null;
+  @Output() onValueChange: EventEmitter<number> = new EventEmitter<number>();
+  value: number = 0;
+  
+  readonly ButtonSize = ButtonSize;
+  readonly PlusButtonIcon: ComponentIcon = {
+    icon: 'fa-solid fa-plus',
+    position: ComponentIconPosition.Left
+  }
+  readonly MinusButtonIcon: ComponentIcon = {
+    icon: 'fa-solid fa-minus',
+    position: ComponentIconPosition.Left
+  }
 
-  public readonly ButtonSize = ButtonSize;
-  public value: number = this.startValue;
+  ngOnInit() {
+    this.value = this.startValue;
+    this.onValueChange.emit(this.value);
+  }
 
   increaseValue():void {
     if (this.maxValue && this.value + this.stepValue > this.maxValue) return;
     this.value += this.stepValue;
+    this.onValueChange.emit(this.value);
   }
 
   decreaseValue():void {
     if (this.minValue && this.value - this.stepValue < this.minValue) return;
     this.value -= this.stepValue;
+    this.onValueChange.emit(this.value);
   }
 }

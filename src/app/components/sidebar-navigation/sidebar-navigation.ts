@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar-navigation',
@@ -7,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './sidebar-navigation.scss'
 })
 export class SidebarNavigation {
+  private router = inject(Router);
 
+  navigateToPage(link: string):void {
+    this.router.navigate([link]);
+  }
 }

@@ -1,0 +1,16 @@
+<div class="crazy-emoji-category-carousel-container">
+    <div class="crazy-emoji-category-carousel-btn left">
+        <app-button [icon]="ScrollLeftBtnIcon" (onClick)="scrollLeft()"></app-button>
+    </div>
+    <div #categoryCarousel class="crazy-emoji-category-carousel">
+        @for (displayableCategory of displayableCategories; track displayableCategory) {
+            <app-category-widget
+                [class.disabled]="displayableCategory.fadeEnabled"
+                [category]="displayableCategory.category">
+            </app-category-widget>
+        }
+    </div>
+    <div class="crazy-emoji-category-carousel-btn right">
+        <app-button [icon]="ScrollRightBtnIcon" (onClick)="scrollRight()"></app-button>
+    </div>
+</div>

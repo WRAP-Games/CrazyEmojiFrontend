@@ -2,14 +2,8 @@
     <div class="crazy-emoji-home-page-block">
         <div class="home-page-block-header">
             <span class="home-page-block-header-title">Categories</span>
-            <span class="home-page-block-header-subtitle">See more</span>
+            <a routerLink="/categories" class="home-page-block-header-subtitle">See more</a>
         </div>
-        <div class="category-widgets overflow">
-            @for (category of categories; track category) {
-                <app-category-widget
-                    [category]="category"
-                ></app-category-widget>
-            }
-        </div>
+        <app-category-carousel [categories]="categories"></app-category-carousel>
     </div>
 </div>
