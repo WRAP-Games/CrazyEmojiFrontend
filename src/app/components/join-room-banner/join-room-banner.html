@@ -1,0 +1,21 @@
+<div class="join-room-banner">
+    <div class="join-room-banner-text">
+        <span class="join-room-banner-text-title">Ready to Compete? 🔥</span>
+        <span class="join-room-banner-text-subtitle">Enter your room PIN and get into the action. The game won’t wait—will you?</span>
+    </div>
+    <div class="join-room-banner-pin-input">
+        <app-input-field
+            [placeholder]="'Enter room PIN'"
+            [color]="InputFieldColor.Secondary"
+            [lineHeight]="60"
+            [inputClass]="'join-room-banner-pin-input-field'"
+            (onValueChange)="onGamePinEnter($event)"
+        ></app-input-field>
+        <app-button
+            [size]="ButtonSize.Large"
+            [icon]="PlayIcon"
+            [disabled]="!enteredGamePin.length"
+            (onClick)="roomService.joinRoom(enteredGamePin)">
+        </app-button>
+    </div>
+</div>

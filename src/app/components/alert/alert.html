@@ -1,0 +1,21 @@
+<div
+    class="crazy-emoji-alert"
+    [class]="alert.type"
+    [class.leave-animation]="leaveAnimation"
+    [style.--alert-duration]="alert.timeout ? alert.timeout + 'ms' : '0'">
+    <div class="crazy-emoji-alert-icon-container">
+        <i class="crazy-emoji-alert-icon fa-solid fa-circle-xmark"></i>
+    </div>
+    <div class="crazy-emoji-alert-text-block">
+        <span class="crazy-emoji-alert-text-block-title">{{ alert.title }}</span>
+        <span class="crazy-emoji-alert-text-block-subtitle">{{ alert.subtitle }}</span>
+    </div>
+    @if (alert.timeout) {
+        <div class="crazy-emoji-alert-timer"></div>
+    }
+    @else {
+        <div class="crazy-emoji-alert-close-btn" (click)="hideAlert(alert)">
+            <i class="crazy-emoji-alert-close-btn-icon fa-solid fa-xmark"></i>
+        </div>
+    }
+</div>

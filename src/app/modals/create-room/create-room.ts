@@ -70,8 +70,9 @@ export class CreateRoom {
       roundDuration: this.roundDuration,
       category: this.category,
       creator: currentUser,
-      pinCode: 'JXDF78',
-      invitedUsers: this.getInvitedUsers()
+      pinCode: null,
+      invitedUsers: this.getInvitedUsers(),
+      joinedUsers: []
     };
     this.dialogRef.close(room);
   }

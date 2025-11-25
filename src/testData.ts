@@ -52,6 +52,7 @@ export const users: User[] = [
 ];
 
 export const currentUser: User = users[0];
+export const roomCreator: User = users[1];
 
 export const categories: Category[] = [
   {

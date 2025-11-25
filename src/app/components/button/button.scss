@@ -3,6 +3,7 @@
     flex-direction: row;
     align-items: center;
     gap: 8px;
+    margin: 4px;
     font-family: var(--crazy-emoji-text-font-family);
     font-weight: 600;
     transition: all .15s ease-in-out;
@@ -18,13 +19,23 @@
     }
 
     &.default:not(.icon-only) {
-        padding: 8px 16px;
+        &.error {
+            padding: 6px 14px;
+        }
+        &:not(.error) {
+            padding: 8px 16px;
+        }
     }
     &.outlined:not(.icon-only) {
         padding: 6px 14px;
     }
     &.icon-only.default {
-        padding: 8px;
+        &.error {
+            padding: 6px;
+        }
+        &:not(.error) {
+            padding: 8px;
+        }
     }
     &.icon-only.outlined {
         padding: 6px;
@@ -73,22 +84,24 @@
     &.icon-only {
         border-radius: 100%;
     }
-
-    &:not(:focus, :focus-visible, .error) {
-        box-shadow: 0px 3px 7px 0px #00000040;
+    
+    &.default {
+        &:focus, &:focus-visible {
+            outline: 2px solid #C23E3E;
+            outline-offset: 2px;
+        }
     }
-    &:focus, &:focus-visible {
-        box-shadow: 0px 0px 15px 0px #C23E3E;
-        outline: none;
+    &.outlined {
+        &:focus, &:focus-visible {
+            outline: 2px solid #E36A6A;
+            outline-offset: 2px;
+        }
     }
-    &.error {
-        box-shadow: 0px 0px 10px 0px #E71F1F;
-    }
-
+    
     &.default {
         color: #FFFFFF;
         &.error {
-            border: 2px solid #FF0000;
+            border: 2px solid #AB0000;
         }
         &:not(.error) {
             border: none;
@@ -114,8 +127,8 @@
             color: #AC4444;
         }
         &.error {
-            border: 2px solid #E71F1F;
-            color: #E71F1F;
+            border: 2px solid #ab0000;
+            color: #ab0000;
         }
         &:disabled {
             opacity: 0.5;

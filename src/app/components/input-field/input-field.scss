@@ -6,6 +6,8 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
     &.disabled {
         opacity: .5;
         pointer-events: none;
@@ -16,17 +18,19 @@
         font-size: 15px;
         line-height: 23px;
         width: 100%;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
         color: var(--crazy-emoji-text-primary);
+        overflow-wrap: anywhere;
     }
     .crazy-emoji-input-field-subtitle {
         font-family: var(--crazy-emoji-text-font-family);
         font-weight: 500;
         font-size: 11px;
-        line-height: 27px;
+        line-height: 17px;
         width: 100%;
-        margin-top: 4px;
+        margin-top: 8px;
         color: var(--crazy-emoji-text-primary);
+        overflow-wrap: anywhere;
     }
     .crazy-emoji-input-field {
         display: flex;
@@ -41,7 +45,8 @@
                 background: #775254;
             }
             &:focus, &:focus-visible {
-                //box-shadow: 0px 0px 10px 0px #8E6568;
+                outline: 2px solid #8E6568;
+                outline-offset: 3px;
             }
         }
         &.secondary {
@@ -50,14 +55,9 @@
                 background: #552228;
             }
             &:focus, &:focus-visible {
-                //outline: 3px solid rgba(255, 255, 255, .2);
+                outline: 2px solid #61272D;
+                outline-offset: 3px;
             }
-        }
-        &.error {
-            background: #C14750;
-        }
-        &:focus, &:focus-visible {
-            outline: none;
         }
         input {
             font-family: var(--crazy-emoji-text-font-family);
@@ -73,13 +73,18 @@
             &:focus, &:focus-visible {
                 outline: none;
             }
+            &::placeholder {
+                color: var(--crazy-emoji-text-primary);
+            }
         }
         .crazy-emoji-input-field-icons {
             display: flex;
             flex-direction: row;
+            align-items: center;
+            flex-grow: 1;
             gap: 5px;
-            height: 100%;
-            font-size: 23px;
+            min-height: 0;
+            font-size: 16px;
             color: var(--crazy-emoji-text-primary);
         }
     }

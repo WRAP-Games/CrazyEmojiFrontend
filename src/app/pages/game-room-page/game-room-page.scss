@@ -1,0 +1,149 @@
+:host {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    .game-loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        width: 100%;
+        height: 100%;
+        .game-loading-container-title {
+            font-family: var(--crazy-emoji-text-font-family);
+            font-weight: 500;
+            font-size: 32px;
+            line-height: 35px;
+            color: var(--crazy-emoji-text-primary);
+        }
+        .game-loading-container-spinner {
+            transform: translateX(-100px);
+        }
+    }
+    .game-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 55px;
+        width: 100%;
+        height: 100%;
+        .round-number-title {
+            font-family: var(--crazy-emoji-text-font-family);
+            font-weight: 700;
+            font-size: 40px;
+            line-height: 60px;
+            color: var(--crazy-emoji-text-primary);
+        }
+        .recieved-word-container {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 10px;
+            .recieved-word-container-title-secondary {
+                font-family: var(--crazy-emoji-text-font-family);
+                font-weight: 600;
+                font-size: 40px;
+                line-height: 60px;
+                color: #B63B3B;
+            }
+            .recieved-word-container-title-primary {
+                font-family: var(--crazy-emoji-text-font-family);
+                font-weight: 700;
+                font-size: 84px;
+                line-height: 80px;
+                color: var(--crazy-emoji-text-primary);
+            }
+        }
+        .submit-response-container {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            ::ng-deep {
+                .game-room-submit-response-input > input {
+                    line-height: 34px;
+                    font-size: 20px;
+                }
+            }
+        }
+    }
+}
+
+.game-container-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: .95;
+    background: #61272D;
+    animation: fade-in .5s;
+    &.exit-animation {
+        opacity: 0;
+        transition: opacity .5s ease-in-out;
+    }
+    .game-container-overlay-contents {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        .game-container-overlay-round {
+            font-family: var(--crazy-emoji-text-font-family);
+            font-weight: 700;
+            font-size: 86px;
+            color: var(--crazy-emoji-text-primary);
+        }
+        .game-container-overlay-role {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            .game-container-overlay-role-title-primary {
+                font-family: var(--crazy-emoji-text-font-family);
+                font-weight: 600;
+                font-size: 64px;
+                line-height: 60px;
+                color: var(--crazy-emoji-text-primary);
+            }
+            .game-container-overlay-role-title-secondary {
+                font-family: var(--crazy-emoji-text-font-family);
+                font-weight: 700;
+                font-size: 96px;
+                line-height: 80px;
+                color: #B63B3B;
+            }
+        }
+        .game-container-overlay-tips {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            .game-container-overlay-tip {
+                font-family: var(--crazy-emoji-text-font-family);
+                font-weight: 600;
+                font-size: 40px;
+                color: #FFFFFF;
+                opacity: .6;
+            }
+        }
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: .95;
+    }
+}

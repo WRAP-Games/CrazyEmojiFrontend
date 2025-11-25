@@ -6,9 +6,12 @@ import { SidebarFriends } from "./components/sidebar-friends/sidebar-friends";
 import { NgxLoadingBar } from '@ngx-loading-bar/core';
 import { Navbar } from "./components/navbar/navbar";
 import { NavbarService } from './services/navbar-service';
-import { NavbarContentColor } from '../definitions';
-import { filter } from 'rxjs';
+import { AlertI, AlertType, NavbarContentColor } from '../definitions';
+import { filter, take } from 'rxjs';
 import { currentUser, users } from '../testData';
+import { ApiRecieveCommands, ApiSendCommands } from '../apiEndpoints';
+import { AlertService } from './services/alert-service';
+import { Signalr } from './services/signalr';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +22,8 @@ import { currentUser, users } from '../testData';
 export class App {
   private router = inject(Router);
   private navbarService: NavbarService = inject(NavbarService);
+  private signalr: Signalr = inject(Signalr);
+  private alertService: AlertService = inject(AlertService);
 
   readonly users = users;
   readonly currentUser = currentUser;
@@ -34,7 +39,8 @@ export class App {
   }
 
   ngOnInit() {
-    this.setNavbarTitle(); 
+    this.setNavbarTitle();
+    this.subscribeToErrors();
   }
 
   private setNavbarTitle():void {
@@ -60,5 +66,19 @@ export class App {
       }
     }
     return message;
+  }
+
+  private subscribeToErrors():void {
+    this.signalr.listen<string>(ApiRecieveCommands.ERROR)
+      .pipe(take(1))
+      .subscribe(error => {
+        const alert: AlertI = {
+          type: AlertType.Error,
+          title: 'Error',
+          subtitle: error,
+          timeout: 10000
+        };
+        this.alertService.displayAlert(alert);
+      });
   }
 }

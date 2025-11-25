@@ -1,0 +1,12 @@
+<div class="crazy-emoji-user-badge" [class.clickable]="clickable">
+    <app-user-profile-img [user]="user" [size]="50" [showOnlineStatus]="false"></app-user-profile-img>
+    <span class="crazy-emoji-user-badge-name">{{ user.firstName }} {{ user.lastName }}</span>
+    @if (clickable) {
+        <app-button
+            class="crazy-emoji-user-badge-close-btn"
+            [icon]="CloseIcon"
+            [size]="ButtonSize.Small"
+            (onClick)="btnClickHandler()">
+        </app-button>
+    }
+</div>

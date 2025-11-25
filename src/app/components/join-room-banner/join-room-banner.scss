@@ -1,0 +1,40 @@
+.join-room-banner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px 25px;
+    border-radius: 35px;
+    box-sizing: border-box;
+    background: var(--crazy-emoji-background-secondary);
+    .join-room-banner-text {
+        display: flex;
+        flex-direction: column;
+        .join-room-banner-text-title {
+            font-family: var(--crazy-emoji-text-font-family);
+            font-weight: 700;
+            font-size: 46px;
+            line-height: 56px;
+            color: #c13d3c;
+        }
+        .join-room-banner-text-subtitle {
+            font-family: var(--crazy-emoji-text-font-family);
+            font-weight: 500;
+            font-size: 26px;
+            line-height: 35px;
+            color: var(--crazy-emoji-text-primary);
+        }
+    }
+    .join-room-banner-pin-input {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 390px;
+        ::ng-deep {
+            .join-room-banner-pin-input-field > input {
+                font-weight: 600!important;
+                font-size: 30px!important;
+            }
+        }
+    }
+}

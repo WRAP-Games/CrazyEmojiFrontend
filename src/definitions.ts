@@ -10,13 +10,6 @@ export enum ComponentIconPosition {
   Right
 }
 
-export enum ButtonColor {
-  Primary = 'primary',
-  Light = 'light',
-  Dark = 'dark',
-  Yellow = 'yellow'
-}
-
 export enum ButtonSize {
   Small = 'small',
   Medium = 'medium',
@@ -53,11 +46,29 @@ export interface NavbarContent {
   color: NavbarContentColor
 }
 
+export enum AlertType {
+  Error = "error",
+  Success = "success",
+  Warning = "warning"
+}
+
+export interface AlertI {
+  type: AlertType,
+  title: string,
+  subtitle: string,
+  timeout?: number
+}
+
 export interface User {
   firstName: string,
   lastName: string,
   profileImg: string,
   online: boolean
+}
+
+export enum RoomRole {
+  Commander,
+  Guesser
 }
 
 export interface Room {
@@ -66,6 +77,8 @@ export interface Room {
   roundDuration: number,
   category: Category,
   creator: User,
-  pinCode: string,
-  invitedUsers: User[]
+  pinCode: string | null,
+  invitedUsers: User[],
+  joinedUsers: User[],
+  currentRound?: number
 }

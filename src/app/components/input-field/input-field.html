@@ -6,8 +6,7 @@
     }
     <div
         class="crazy-emoji-input-field"
-        [class.error]="error"
-        [class]="color"
+        [class]="[color, inputClass]"
         tabindex="0">
         @if (leftSideIcons.length) {
             <div class="crazy-emoji-input-field-icons">

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ButtonColor, ButtonCorners, ComponentIconPosition, ButtonSize, ButtonType, ComponentIcon } from '../../../definitions';
+import { ButtonCorners, ComponentIconPosition, ButtonSize, ButtonType, ComponentIcon } from '../../../definitions';
 
 @Component({
   selector: 'app-button',
@@ -10,7 +10,6 @@ import { ButtonColor, ButtonCorners, ComponentIconPosition, ButtonSize, ButtonTy
 export class Button {
   @Input() text: string | null = null;
   @Input() icon: ComponentIcon | null = null;
-  @Input() color: ButtonColor = ButtonColor.Primary;
   @Input() size: ButtonSize = ButtonSize.Medium;
   @Input() type: ButtonType = ButtonType.Default;
   @Input() corners: ButtonCorners = ButtonCorners.Default;

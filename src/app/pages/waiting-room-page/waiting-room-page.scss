@@ -3,38 +3,40 @@
     height: 100%;
 }
 
-.crazy-emoji-waiting-room {
+.waiting-room {
     display: flex;
     flex-direction: column;
     gap: 40px;
     width: 100%;
     height: 100%;
-    .crazy-emoji-waiting-room-header {
+    .waiting-room-header {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
+        gap: 20px;
         width: 100%;
         padding: 27px 50px;
         border-radius: 20px;
         box-sizing: border-box;
         background-color: var(--crazy-emoji-background-secondary);
-        .crazy-emoji-waiting-room-header-code {
+        .waiting-room-header-code {
             display: flex;
             flex-direction: row;
-            .crazy-emoji-waiting-room-header-code-title {
+            .waiting-room-header-code-title {
                 display: flex;
                 flex-direction: column;
                 gap: 5px;
-                width: 316px;
-                .crazy-emoji-waiting-room-header-code-title-text {
+                width: 310px;
+                min-width: 170px;
+                .waiting-room-header-code-title-text {
                     font-family: var(--crazy-emoji-text-font-family);
                     font-weight: 500;
                     font-size: 32px;
                     line-height: 35px;
                     color: var(--crazy-emoji-text-primary);
                 }
-                .crazy-emoji-waiting-room-header-code-title-text-code {
+                .waiting-room-header-code-title-text-code {
                     font-family: var(--crazy-emoji-text-font-family);
                     font-weight: 800;
                     font-size: 48px;
@@ -42,7 +44,7 @@
                     color: #c13d3c;
                 }
             }
-            .crazy-emoji-waiting-room-header-code-text {
+            .waiting-room-header-code-text {
                 font-family: var(--crazy-emoji-text-font-family);
                 font-weight: 800;
                 font-size: 96px;
@@ -50,15 +52,16 @@
                 color: #c13d3c;
             }
         }
-        .crazy-emoji-waiting-room-header-details {
+        .waiting-room-header-details {
             display: flex;
             flex-direction: column;
+            flex-shrink: 0;
             gap: 10px;
-            .crazy-emoji-waiting-room-header-details-row {
+            .waiting-room-header-details-row {
                 display: flex;
                 flex-direction: row;
                 gap: 7px;
-                .crazy-emoji-waiting-room-header-details-row-text {
+                .waiting-room-header-details-row-text {
                     font-family: var(--crazy-emoji-text-font-family);
                     font-weight: 500;
                     font-size: 24px;
@@ -67,24 +70,73 @@
                         color: var(--crazy-emoji-text-primary);
                     }
                     &.secondary {
-                        color: rgba(169, 85, 98, 1);
+                        color: #a95562;
                     }
                 }
             }
         }
     }
-    .crazy-emoji-waiting-room-title {
-        width: 100%;
-        font-family: var(--crazy-emoji-text-font-family);
-        font-weight: 700;
-        font-size: 64px;
-        line-height: 50px;
-        color: var(--crazy-emoji-text-primary);
-        text-align: center;
-    }
-    .crazy-emoji-waiting-room-joined-users {
+    .waiting-room-title-container {
         display: flex;
+        flex-direction: row;
+        justify-content: center;
+        position: relative;
         width: 100%;
-        height: 100%;
+        .waiting-room-title {
+            font-family: var(--crazy-emoji-text-font-family);
+            font-weight: 700;
+            font-size: 64px;
+            line-height: 64px;
+            color: var(--crazy-emoji-text-primary);
+        }
+        .waiting-room-joined-users-counter {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            position: absolute;
+            gap: 10px;
+            right: 0;
+            height: 100%;
+            .waiting-room-joined-users-counter-number {
+                font-family: var(--crazy-emoji-text-font-family);
+                font-weight: 600;
+                font-size: 48px;
+                line-height: 40px;
+                color: #a95562;
+            }
+            .waiting-room-joined-users-counter-icon {
+                font-size: 40px;
+                color: #a95562;
+            }
+        }
+    }
+    .waiting-room-joined-users-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        width: 100%;
+        min-height: 0;
+        .waiting-room-joined-users {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            align-content: flex-start;
+            flex-wrap: wrap;
+            width: 100%;
+            .waiting-room-joined-users-no-users {
+                align-self: center;
+                font-family: var(--crazy-emoji-text-font-family);
+                font-weight: 500;
+                font-size: 40px;
+                line-height: 52px;
+                color: var(--crazy-emoji-text-primary);
+            }
+        }
+    }
+    .waiting-room-footer {
+        display: flex;
+        justify-content: center;
+        width: 100%;
     }
 }

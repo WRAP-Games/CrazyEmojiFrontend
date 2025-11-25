@@ -59,8 +59,11 @@
             .room-settings-block {
                 display: flex;
                 flex-direction: row;
-                justify-content: center;
-                gap: 85px;
+                .room-settings-block-item {
+                    display: flex;
+                    justify-content: center;
+                    width: 50%;
+                }
             }
             .invite-friends-block {
                 display: flex;
@@ -97,12 +100,13 @@
                             .user-invitation-info {
                                 display: flex;
                                 flex-direction: row;
+                                align-items: center;
                                 gap: 10px;
                                 .user-invitation-info-name {
                                     font-family: var(--crazy-emoji-text-font-family);
                                     font-weight: 600;
                                     font-size: 16px;
-                                    line-height: 39px;
+                                    line-height: 24px;
                                     color: var(--crazy-emoji-text-primary);
                                 }
                             }

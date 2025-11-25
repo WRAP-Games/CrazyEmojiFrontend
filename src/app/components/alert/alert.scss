@@ -1,0 +1,122 @@
+@use '@material/elevation' as mdc-elevation;
+
+.crazy-emoji-alert {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    gap: 16px;
+    width: 410px;
+    max-width: 95vw;
+    padding: 12px 16px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--crazy-emoji-alert-background);
+    @include mdc-elevation.elevation(4);
+    animation: .7s enter-animation;
+    .crazy-emoji-alert-icon-container {
+        display: flex;
+        flex: 0;
+        padding: 6px;
+        border-radius: 100%;
+        background: var(--crazy-emoji-icon-background);
+        .crazy-emoji-alert-icon {
+            width: 20px;
+            height: 20px;
+            font-size: 20px;
+            color: var(--alert-icon-color);
+        }
+    }
+    .crazy-emoji-alert-text-block {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 3px;
+        height: 100%;
+        min-width: 0;
+        .crazy-emoji-alert-text-block-title {
+            font-family: var(--crazy-emoji-text-font-family);
+            font-weight: 700;
+            font-size: 17px;
+            line-height: 22px;
+            color: var(--crazy-emoji-text-primary);
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .crazy-emoji-alert-text-block-subtitle {
+            font-family: var(--crazy-emoji-text-font-family);
+            font-weight: 400;
+            font-size: 13px;
+            line-height: 15px;
+            color: var(--crazy-emoji-alert-subtitle);
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    .crazy-emoji-alert-timer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 3px;
+        background: var(--alert-timer-color);
+        animation: var(--alert-duration) timer-animation;
+    }
+    .crazy-emoji-alert-close-btn {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 7px;
+        right: 7px;
+        width: 25px;
+        height: 25px;
+        border-radius: 100%;
+        background: var(--crazy-emoji-icon-background);
+        transition: background .1s ease-in;
+        pointer-events: all;
+        &:hover {
+            background: var(--crazy-emoji-icon-hover-background);
+        }
+        .crazy-emoji-alert-close-btn-icon {
+            font-size: 15px;
+            color: var(--crazy-emoji-alert-subtitle);
+        }
+    }
+    &.leave-animation {
+        opacity: 0;
+        transition: opacity .15s ease-in-out;
+    }
+    &.error {
+        --alert-icon-color: var(--crazy-emoji-alert-icon-error);
+        --alert-timer-color: var(--crazy-emoji-alert-timer-error);
+    }
+    &.success {
+        --alert-icon-color: var(--crazy-emoji-alert-icon-success);
+        --alert-timer-color: var(--crazy-emoji-alert-timer-success);
+    }
+    &.warning {
+        --alert-icon-color: var(--crazy-emoji-alert-icon-warning);
+        --alert-timer-color: var(--crazy-emoji-alert-timer-warning);
+    }
+}
+
+@keyframes timer-animation {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes enter-animation {
+    from {
+        transform: translateY(calc(-100% - 5px));
+    }
+    to {
+        transform: translateY(0);
+    }
+}

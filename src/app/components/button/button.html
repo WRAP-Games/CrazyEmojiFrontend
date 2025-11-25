@@ -1,7 +1,8 @@
 <button
     class="crazy-emoji-btn"
     [disabled]="disabled"
-    [class]="[color, size, type, corners]"
+    [class]="[size, type, corners]"
+    [class.error]="error"
     [class.icon-only]="icon && !text"
     (click)="onClickEvent()">
     @if (icon && !text) {

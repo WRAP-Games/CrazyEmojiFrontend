@@ -1,0 +1,5 @@
+<div class="crazy-emoji-alerts">
+    @for (alertTuple of alerts; track alertTuple) {
+        <app-alert [alert]="alertTuple[0]" [leaveAnimation]="alertTuple[1]"></app-alert>
+    }
+</div>
