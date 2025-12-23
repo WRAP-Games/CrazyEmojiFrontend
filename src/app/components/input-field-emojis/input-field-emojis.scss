@@ -1,0 +1,104 @@
+:host {
+    display: flex;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.input-field-emojis-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 864px;
+    max-width: 100%;
+    .input-field-emojis {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 21px;
+        width: 100%;
+        padding: 8px 16px;
+        border-radius: 23px;
+        background: #A9556299;
+        cursor: pointer;
+        box-sizing: border-box;
+        .input-field-emojis-value {
+            display: flex;
+            flex: 1;
+            min-width: 0;
+            font-size: 48px;
+            line-height: 60px;
+            color: var(--crazy-emoji-text-primary);
+            caret-color: var(--crazy-emoji-text-primary);
+            &.placeholder {
+                font-family: var(--crazy-emoji-text-font-family);
+                font-weight: 600;
+                opacity: .6;
+            }
+            &:not(.placeholder) {
+                font-family: "Noto Color Emoji", sans-serif;
+                font-weight: 400;
+            }
+            &:focus,
+            &:focus-visible {
+                outline: none;
+            }
+        }
+    }
+    .input-field-emojis-selection {
+        display: flex;
+        flex-grow: 1;
+        width: 100%;
+        min-height: 0;
+        max-height: 431px;
+        padding: 20px 30px;
+        border-radius: 20px;
+        background: #36161780;
+        box-sizing: border-box;
+        &.hidden {
+            visibility: 0;
+            pointer-events: none;
+        }
+        .input-field-emojis-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            .input-field-emojis-group {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                .input-field-emojis-group-name {
+                    font-family: var(--crazy-emoji-text-font-family);
+                    font-weight: 500;
+                    font-size: 24px;
+                    color: var(--crazy-emoji-text-primary);
+                    width: 100%;
+                }
+                .input-field-emojis-group-elements {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    .input-field-emoji-element-container {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 42px;
+                        height: 42px;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        background: transparent;
+                        transition: background .15s ease-in-out;
+                        &:hover {
+                            background: #3c181c;
+                        }
+                        .input-field-emoji-element {
+                            font-family: "Noto Color Emoji", sans-serif;
+                            font-weight: 400;
+                            font-style: normal;
+                            font-size: 30px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

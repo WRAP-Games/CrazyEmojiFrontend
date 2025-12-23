@@ -7,7 +7,7 @@
     <div
         class="crazy-emoji-input-field"
         [class]="[color, inputClass]"
-        tabindex="0">
+        [class.focused]="focused">
         @if (leftSideIcons.length) {
             <div class="crazy-emoji-input-field-icons">
                 @for (icon of leftSideIcons; track icon) {
@@ -16,7 +16,7 @@
             </div>
         }
         <input
-            type="text"
+            [type]="type"
             [disabled]="disabled"
             [required]="required"
             [attr.value]="value"
@@ -24,7 +24,9 @@
             [attr.maxLength]="maxlength"
             [attr.placeholder]="placeholder"
             [style.--line-height.px]="lineHeight"
-            (input)="valueChangeHandler($event)"/>
+            (input)="valueChangeHandler($event)"
+            (focus)="focused = true"
+            (blur)="focused = false"/>
         @if (rightSideIcons.length) {
             <div class="crazy-emoji-input-field-icons">
                 @for (icon of rightSideIcons; track icon) {

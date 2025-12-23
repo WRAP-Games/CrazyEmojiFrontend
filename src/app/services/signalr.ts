@@ -1,16 +1,16 @@
 import { inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { ApiRecieveCommands, ApiSendCommands } from '../../apiEndpoints';
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { from, Observable, Subject } from 'rxjs';
 import { AlertService } from './alert-service';
-import { AlertI, AlertType } from '../../definitions';
+import { AlertI, AlertType, ConnectionState } from '../../definitions';
 import { HubConnectionState } from '@microsoft/signalr';
+import { ApiEndpoints } from '../../apiEndpoints';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Signalr {
-  connectionState = new BehaviorSubject<HubConnectionState | undefined>(undefined);
+  connectionState = new Subject<ConnectionState>();
   private hubConnection!: signalR.HubConnection;
   private alertService: AlertService = inject(AlertService);
 
@@ -19,7 +19,6 @@ export class Signalr {
     title: 'Connection Failed',
     subtitle: `
       The app couldn’t establish a connection to the server.
-      Most features will be unavailable.
       Check your internet connection and reload the app.
     `
   };
@@ -47,7 +46,6 @@ export class Signalr {
     title: 'Reconnection Failed',
     subtitle: `
       The app couldn’t restore the connection to the server, and the connection has been closed.
-      Many features will not work.
       Please check your internet connection and reload the app.
     `
   };
@@ -61,7 +59,8 @@ export class Signalr {
     timeout: 15000
   };
 
-  listen<T = any>(command: ApiRecieveCommands): Observable<T> {
+  listen<T = any>(command: string): Observable<T> {
+    console.log('[SIGNALR] Listening for command', command);
     return new Observable<T>(subscriber => {
       if (!this.hubConnection) return;
       const handler = (data: T) => {
@@ -75,23 +74,34 @@ export class Signalr {
     });
   }
   
-  sendMessage(command: ApiSendCommands, message?: string) {
+  listenToError(command: string): Observable<string> {
+    console.log('[SIGNALR] Listening for error for command:', command)
+    return new Observable<string>(subscriber => {
+      if (!this.hubConnection) return;
+      const handler = (error: string) => {
+        console.log('[SIGNALR] Recieved error:', error)
+        if (error.startsWith(command)) {
+          const errorCode = error.slice(command.length + 1);
+          subscriber.next(errorCode);
+          console.log('[SIGNALR] Error', 'command', command, 'error', errorCode);
+        }
+      };
+      this.hubConnection.on(ApiEndpoints.ERROR.RECIEVE, handler);
+      return () => {
+        this.hubConnection.off(ApiEndpoints.ERROR.RECIEVE, handler);
+      };
+    });
+  }
+
+  sendMessage(command: string, ...args: any[]) {
     if (this.hubConnection.state !== HubConnectionState.Connected) {
       this.alertService.displayAlert(this.NO_CONNECTION_ALERT);
       return;
     }
-
-    if (message !== undefined) {
-      const promise = this.hubConnection.invoke(command, message)
-        .then(() => console.log('[SIGNALR] Message sent successfully to hub', 'command', command, 'message', message))
-        .catch(err => console.log('[SIGNALR] Error while sending message:', err));
-      return from(promise);
-    } else {
-      const promise = this.hubConnection.invoke(command)
-        .then(() => console.log('[SIGNALR] Message sent successfully to hub', 'command', command))
-        .catch(err => console.log('[SIGNALR] Error while sending message:', err));
-      return from(promise);
-    }
+    const promise = this.hubConnection.invoke(command, ...args)
+      .then(() => console.log('[SIGNALR] Message sent successfully to hub', 'command', command, 'message', ...args))
+      .catch(err => console.log('[SIGNALR] Error while sending message:', err));
+    return from(promise);
   }
 
   startConnection(): Promise<void> {
@@ -103,18 +113,17 @@ export class Signalr {
     this.hubConnection.onreconnecting(error => {
       console.log('[SIGNALR] SignalR connection lost. Reconnecting', error);
       this.alertService.displayAlert(this.RECONNECTING_STARTED_ALERT);
-      this.connectionState.next(this.hubConnection.state);
     });
     this.hubConnection.onreconnected(connectionId => {
       console.log('[SIGNALR] SignalR reconnected. ConnectionId:', connectionId);
       this.alertService.hideAlert(this.RECONNECTING_STARTED_ALERT);
       this.alertService.displayAlert(this.RECONNECTED_ALERT);
-      this.connectionState.next(this.hubConnection.state);
+      this.connectionState.next(ConnectionState.Reconnected);
     });
     this.hubConnection.onclose(error => {
       console.log('[SIGNALR] SignalR connection closed', error);
       this.alertService.displayAlert(this.DISCONNECTED_ALERT);
-      this.connectionState.next(this.hubConnection.state);
+      this.connectionState.next(ConnectionState.Disconnected);
     });
 
     return this.hubConnection
@@ -123,7 +132,6 @@ export class Signalr {
       .catch(error => {
         console.log('[SIGNALR] Failed to establish connection with a server', error);
         this.alertService.displayAlert(this.INITIAL_CONNECTION_FAILED_ALERT);
-        this.connectionState.next(this.hubConnection.state);
         return Promise.resolve();
       });
   }

@@ -1,7 +1,16 @@
+export enum StorageKeys {
+  Username = "username",
+  Password = "password"
+}
+
+export enum ConnectionState {
+  Disconnected,
+  Reconnected
+}
+
 export interface Category {
   name: string,
   description: string,
-  requiredLevel: number,
   image: string
 }
 
@@ -60,10 +69,7 @@ export interface AlertI {
 }
 
 export interface User {
-  firstName: string,
-  lastName: string,
-  profileImg: string,
-  online: boolean
+  username: string
 }
 
 export enum RoomRole {
@@ -78,7 +84,6 @@ export interface Room {
   category: Category,
   creator: User,
   pinCode: string | null,
-  invitedUsers: User[],
   joinedUsers: User[],
   currentRound?: number
 }

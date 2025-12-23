@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { NavbarContent, User } from '../../../definitions';
 import { NavbarService } from '../../services/navbar-service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { currentUser } from '../../../testData';
 import { UserProfileImg } from "../user-profile-img/user-profile-img";
+import { Authentication } from '../../services/authentication';
 
 @Component({
   selector: 'app-navbar',
@@ -13,9 +13,9 @@ import { UserProfileImg } from "../user-profile-img/user-profile-img";
 })
 export class Navbar {
   private navbarService: NavbarService = inject(NavbarService);
+  
+  authenticationService: Authentication = inject(Authentication);
   contents: NavbarContent[] | null = null;
-
-  readonly currentUser: User = currentUser;
 
   constructor() {
     this.navbarService.navbarContent$.pipe(takeUntilDestroyed()).subscribe(contents => {

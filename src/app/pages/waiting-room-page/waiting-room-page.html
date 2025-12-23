@@ -1,73 +1,71 @@
-<div class="waiting-room">
-    <div class="waiting-room-header">
-        <div class="waiting-room-header-code">
-            <div class="waiting-room-header-code-title">
-                <span class="waiting-room-header-code-title-text">Join the room by entering</span>
-                <span class="waiting-room-header-code-title-text-code">Game PIN:</span>
+@if (room) {
+    <div class="waiting-room">
+        <div class="waiting-room-header">
+            <div class="waiting-room-header-code">
+                <div class="waiting-room-header-code-title">
+                    <span class="waiting-room-header-code-title-text">Join the room by entering</span>
+                    <span class="waiting-room-header-code-title-text-code">Game PIN:</span>
+                </div>
+                <span class="waiting-room-header-code-text">
+                    {{ room.pinCode }}
+                </span>
             </div>
-            <span class="waiting-room-header-code-text">
-                {{ room.pinCode }}
-            </span>
+            <div class="waiting-room-header-details">
+                <div class="waiting-room-header-details-row">
+                    <span class="waiting-room-header-details-row-text secondary">Categories:</span>
+                    <span class="waiting-room-header-details-row-text primary">
+                        {{ room.category.name }}
+                    </span>
+                </div>
+                <div class="waiting-room-header-details-row">
+                    <span class="waiting-room-header-details-row-text secondary">Rounds:</span>
+                    <span class="waiting-room-header-details-row-text primary">
+                        {{ room.rounds }}
+                    </span>
+                </div>
+                <div class="waiting-room-header-details-row">
+                    <span class="waiting-room-header-details-row-text secondary">Time Per Round:</span>
+                    <span class="waiting-room-header-details-row-text primary">
+                        {{ room.roundDuration }}
+                    </span>
+                </div>
+                <div class="waiting-room-header-details-row">
+                    <span class="waiting-room-header-details-row-text secondary">Room Creator:</span>
+                    <span class="waiting-room-header-details-row-text primary">
+                        {{ room.creator.username }}
+                    </span>
+                </div>
+            </div>
         </div>
-        <div class="waiting-room-header-details">
-            <div class="waiting-room-header-details-row">
-                <span class="waiting-room-header-details-row-text secondary">Categories:</span>
-                <span class="waiting-room-header-details-row-text primary">
-                    {{ room.category.name }}
-                </span>
-            </div>
-            <div class="waiting-room-header-details-row">
-                <span class="waiting-room-header-details-row-text secondary">Rounds:</span>
-                <span class="waiting-room-header-details-row-text primary">
-                    {{ room.rounds }}
-                </span>
-            </div>
-            <div class="waiting-room-header-details-row">
-                <span class="waiting-room-header-details-row-text secondary">Time Per Round:</span>
-                <span class="waiting-room-header-details-row-text primary">
-                    {{ room.roundDuration }}
-                </span>
-            </div>
-            <div class="waiting-room-header-details-row">
-                <span class="waiting-room-header-details-row-text secondary">Room Creator:</span>
-                <span class="waiting-room-header-details-row-text primary">
-                    {{ room.creator.firstName }} {{ room.creator.lastName }}
-                </span>
+        <div class="waiting-room-title-container">
+            <span class="waiting-room-title">{{ room.name }}</span>
+            <div class="waiting-room-joined-users-counter">
+                <span class="waiting-room-joined-users-counter-number">{{ room.joinedUsers.length }}</span>
+                <i class="waiting-room-joined-users-counter-icon fa-solid fa-users"></i>
             </div>
         </div>
+        <div class="waiting-room-joined-users-container">
+            <ng-scrollbar [orientation]="'vertical'">
+                <div class="waiting-room-joined-users">
+                    @for (user of room.joinedUsers; track user) {
+                        <app-user-badge [user]="user" [clickable]="false"></app-user-badge>
+                    }
+                    @if (!room.joinedUsers.length) {
+                        <span class="waiting-room-joined-users-no-users">Waiting for players to join...</span>
+                    }
+                </div>
+            </ng-scrollbar>
+        </div>
+        @if (room.creator === authenticationService.currentUser) {
+            <div class="waiting-room-footer">
+                <app-button
+                    [text]="'Start Game'"
+                    [size]="ButtonSize.Large"
+                    [icon]="playIconLeft"
+                    [disabled]="room.joinedUsers.length < 3"
+                    (onClick)="startGame()">
+                </app-button>
+            </div>
+        }
     </div>
-    <div class="waiting-room-title-container">
-        <span class="waiting-room-title">{{ room.name }}</span>
-        <div class="waiting-room-joined-users-counter">
-            <span class="waiting-room-joined-users-counter-number">{{ room.joinedUsers.length }}</span>
-            <i class="waiting-room-joined-users-counter-icon fa-solid fa-users"></i>
-        </div>
-    </div>
-    <div class="waiting-room-joined-users-container">
-        <ng-scrollbar [orientation]="'vertical'">
-            <div class="waiting-room-joined-users">
-                @for (user of room.joinedUsers; track user) {
-                    <app-user-badge
-                        [user]="user"
-                        [clickable]="room.creator === CurrentUser"
-                        (onBtnClick)="removeJoinedUser(user)">
-                    </app-user-badge>
-                }
-                @if (!room.joinedUsers.length) {
-                    <span class="waiting-room-joined-users-no-users">Waiting for players to join...</span>
-                }
-            </div>
-        </ng-scrollbar>
-    </div>
-    @if (room.creator === CurrentUser) {
-        <div class="waiting-room-footer">
-            <app-button
-                [text]="'Start Game'"
-                [size]="ButtonSize.Large"
-                [icon]="playIconLeft"
-                [disabled]="room.joinedUsers.length === 0"
-                (onClick)="startGame()">
-            </app-button>
-        </div>
-    }
-</div>
+}

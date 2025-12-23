@@ -1,0 +1,49 @@
+<div class="crazy-emoji-authentication-block">
+    <div class="authentication-block-header">
+        <i class="authentication-block-brand-icon fa-solid fa-icons"></i>
+        <span class="authentication-block-title">{{ authenticationMethod === 'login' ? 'Welcome back!' : 'Create an account' }}</span>
+    </div>
+    <div class="authentication-block-inputs">
+        <app-input-field
+            [title]="'Username'"
+            [placeholder]="'Enter username'"
+            [color]="InputFieldColor.Secondary"
+            [required]="true"
+            (onValueChange)="onUsernameEnter($event)">
+        </app-input-field>
+        <app-input-field
+            [title]="'Password'"
+            [placeholder]="'Enter password'"
+            [type]="'password'"
+            [color]="InputFieldColor.Secondary"
+            [required]="true"
+            (onValueChange)="onPasswordEnter($event)">
+        </app-input-field>
+    </div>
+    <div class="authentication-block-actions">
+        <app-button
+            [text]="authenticationMethod === 'login' ? 'Log In' : 'Sign Up'"
+            [icon]="LoginButtonIcon"
+            [disabled]="!username.length || !password.length || isAuthenticationInProgress"
+            (onClick)="authenticationMethod === 'login' ? login() : signup()">
+        </app-button>
+        <div class="authentication-block-switch-methods">
+            @if (authenticationMethod === 'login') {
+                <span class="authentication-block-switch-methods-text primary">Don't Have An Account?</span>
+                <span
+                    class="authentication-block-switch-methods-text secondary"
+                    (click)="authenticationMethod = 'signup'">
+                    Register Now
+                </span>   
+            }
+            @else {
+                <span class="authentication-block-switch-methods-text primary">Already Have An Account?</span>
+                <span
+                    class="authentication-block-switch-methods-text secondary"
+                    (click)="authenticationMethod = 'login'">
+                    Log In
+                </span>
+            }
+        </div>
+    </div>
+</div>

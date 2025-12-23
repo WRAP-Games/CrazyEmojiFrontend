@@ -6,15 +6,17 @@ import { Router } from '@angular/router';
 import { RoomService } from '../../services/room-service';
 import { AlertI, AlertType, ButtonSize, ComponentIcon, ComponentIconPosition, Room, RoomRole } from '../../../definitions';
 import { Subscription, take, timer } from 'rxjs';
-import { ApiRecieveCommands, ApiSendCommands } from '../../../apiEndpoints';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LoadingBarService, NgxLoadingBar } from "@ngx-loading-bar/core";
 import { InputField } from "../../components/input-field/input-field";
 import { Button } from "../../components/button/button";
+import { ApiEndpoints } from '../../../apiEndpoints';
+import { InputFieldEmojis } from "../../components/input-field-emojis/input-field-emojis";
+import { ApiService } from '../../services/api-service';
+import { Authentication } from '../../services/authentication';
 
 @Component({
   selector: 'app-game-room-page',
-  imports: [NgxLoadingBar, InputField, Button],
+  imports: [InputField, Button, InputFieldEmojis],
   templateUrl: './game-room-page.html',
   styleUrl: './game-room-page.scss'
 })
@@ -24,46 +26,15 @@ export class GameRoomPage {
   private signalr = inject(Signalr);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
-  private loadingBar: LoadingBarService = inject(LoadingBarService);
   private roomService: RoomService = inject(RoomService);
+  private apiService: ApiService = inject(ApiService);
+  private authenticationService: Authentication = inject(Authentication);
 
   readonly RoomRole = RoomRole;
   readonly ButtonSize = ButtonSize;
   readonly SendBtnIcon: ComponentIcon = {
     icon: 'fa-solid fa-paper-plane',
     position: ComponentIconPosition.Right
-  };
-  readonly CommanderAlert: AlertI = {
-    type: AlertType.Success,
-    title: 'You are the Picker',
-    subtitle: `
-      Pick emojis that represent the given word best and let other players guess it.
-      TIP: don’t make it too easy or difficult because you will loose points.
-    `,
-    timeout: 15000
-  };
-  readonly GuesserAlert: AlertI = {
-    type: AlertType.Success,
-    title: 'You are the Guesser',
-    subtitle: 'Guess the word based on given emojis.',
-    timeout: 15000
-  };
-  readonly CorrectGuessAlert: AlertI = {
-    type: AlertType.Success,
-    title: 'Your guess is correct.',
-    subtitle: 'Your guess is correct.',
-    timeout: 15000
-  };
-  readonly IncorrectGuessAlert: AlertI = {
-    type: AlertType.Error,
-    title: 'Your guess is incorrect.',
-    subtitle: 'Your guess is incorrect.',
-    timeout: 15000
-  };
-  readonly RoomNotFoundAlert: AlertI = {
-    type: AlertType.Error,
-    title: 'Room Not Found',
-    subtitle: 'Room Not Found'
   };
 
   room!: Room;
@@ -76,30 +47,19 @@ export class GameRoomPage {
   overlayStartExitAnimation: boolean = false;
 
   ngOnInit() {
+    console.log('roomService.currentRoom', this.roomService.currentRoom);
     if (!this.roomService.currentRoom) {
-      this.alertService.displayAlert(this.RoomNotFoundAlert);
       this.router.navigate(['/']);
       return;
     }
     this.room = this.roomService.currentRoom;
+    console.log('room', this.room);
     this.navbarService.disableNavbar();
     this.startRound();
   }
 
-  onInputFieldEnter(value: string):void {
-    this.inputValue = value;
-  }
-
-  submitGuess():void {
-    if (this.roomRole === undefined || !this.inputValue.length) return;
-    if (this.roomRole === RoomRole.Guesser) {
-      this.signalr.sendMessage(ApiSendCommands.CHECK_WORD, this.inputValue);
-      this.loadingScreenTitle = 'Please wait for all players to submit their guesses';
-      this.listenForGuessResult();
-    } else {
-      this.signalr.sendMessage(ApiSendCommands.GET_AND_SEND_EMOJIS, this.inputValue);
-      this.loadingScreenTitle = 'Please wait for players to submit their guesses';
-    }
+  ngOnDestroy() {
+    this.roomService.leaveRoom();
   }
 
   private startRound():void {
@@ -107,89 +67,129 @@ export class GameRoomPage {
     this.roomRole = undefined;
     this.recievedWordOrEmoji = undefined;
     this.loadingScreenTitle = 'Please wait for the round to start';
-    this.loadingBar.start();
-    this.listenToCommanderSelection();
+    this.getRoundCommander();
     this.listenForRoundEnd();
   }
 
-  private listenToCommanderSelection():void {
-    let commanderSelectedSub: Subscription;
-    let commanderAnnouncedSub: Subscription;
-
-    commanderSelectedSub = this.signalr.listen<string>(ApiRecieveCommands.COMMANDER_SELECTED)
+  private getRoundCommander():void {
+    this.apiService.getCommander()
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe(msg => {
-        this.listenForWord();
-        commanderAnnouncedSub.unsubscribe();
-        this.roomRole = RoomRole.Commander;
-        this.displayOverlay();
-      });
-    
-    commanderAnnouncedSub = this.signalr.listen<string>(ApiRecieveCommands.COMMANDER_ANNOUNCED)
-      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe(msg => {
-        this.listenForEmojis();
-        commanderSelectedSub.unsubscribe();
-        this.roomRole = RoomRole.Guesser;
-        this.loadingScreenTitle = 'Wait for the commander to submit emojis';
-        this.displayOverlay();
+      .subscribe(response => {
+        if (response.success) {
+          if (response.data.username === this.authenticationService.currentUser.username) {
+            this.roomRole = RoomRole.Commander;
+            this.displayOverlay();
+            this.listenForWord();
+          } else {
+            this.loadingScreenTitle = 'Please wait for commander to select emojis';
+            this.roomRole = RoomRole.Guesser;
+            this.displayOverlay();
+            this.listenForEmojis();
+          }
+        } else {
+          const errorMessage = ApiEndpoints.GET_COMMANDER.ERRORS.find(ERROR => ERROR.CODE === response.data)?.MESSAGE;
+          this.alertService.displayAlert({
+            type: AlertType.Error,
+            title: 'Failed To Get Round Commander',
+            subtitle: errorMessage ?? 'Failed To Get Round Commander Due To Unknown Error',
+            timeout: 7000
+          });
+        }
       });
   }
 
   private listenForWord():void {
-    this.signalr.listen<string>(ApiRecieveCommands.RECIEVE_WORD)
+    /////////////////////////////////
+    this.recievedWordOrEmoji = 'Movies';
+    this.loadingScreenTitle = '';
+    return;
+    /////////////////////////////////
+
+    this.apiService.getWord()
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe(word => {
-        this.recievedWordOrEmoji = word;
-        this.loadingScreenTitle = '';
-        this.loadingBar.complete();
+      .subscribe(response => {
+        if (response.success) {
+          this.recievedWordOrEmoji = response.data;
+          this.loadingScreenTitle = '';
+        } else {
+          const errorMessage = ApiEndpoints.GET_WORD.ERRORS.find(ERROR => ERROR.CODE === response.data)?.MESSAGE;
+          this.alertService.displayAlert({
+            type: AlertType.Error,
+            title: 'Failed To Get Round Word',
+            subtitle: errorMessage ?? 'Failed To Get Round Word Due To Unknown Error',
+            timeout: 7000
+          });
+        }
       });
   }
 
   private listenForEmojis():void {
-    this.signalr.listen<string>(ApiRecieveCommands.RECIEVE_EMOJIS)
+    this.signalr.listen<string>(ApiEndpoints.RECIEVE_EMOJIS.RECIEVE)
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe(emojis => {
         this.recievedWordOrEmoji = emojis;
         this.loadingScreenTitle = '';
-        this.loadingBar.complete();
       });
   }
 
-  private listenForGuessResult():void {
-    let correctAnswerdSub: Subscription;
-    let incorrectAnswerdSub: Subscription;
+  onInputFieldEnter(value: string):void {
+    this.inputValue = value;
+  }
 
-    correctAnswerdSub = this.signalr.listen<string>(ApiRecieveCommands.CORRECT_GUESS)
-      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe(pinCode => {
-        incorrectAnswerdSub.unsubscribe();
-        this.alertService.displayAlert(this.CorrectGuessAlert);
-        this.loadingScreenTitle = 'Please wait for all players to submit their guesses';
-        this.loadingBar.start();
-      });
-    incorrectAnswerdSub = this.signalr.listen<string>(ApiRecieveCommands.INCORRECT_GUESS)
-      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe(pinCode => {
-        correctAnswerdSub.unsubscribe();
-        this.alertService.displayAlert(this.IncorrectGuessAlert);
-        this.loadingScreenTitle = 'Please wait for all players to submit their guesses';
-        this.loadingBar.start();
-      });
+  submitEmojis(emojis: string) {
+    this.inputValue = emojis;
+    this.submitGuess();
+  }
+
+  submitGuess():void {
+    if (this.roomRole === undefined || !this.inputValue.length) return;
+    if (this.roomRole === RoomRole.Guesser) {
+      this.loadingScreenTitle = 'Please wait for all players to submit their guesses';
+      this.apiService.checkWord(this.inputValue)
+        .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+        .subscribe(response => {
+          if (response.success) {
+            console.log('word is checked. result:', response.data);
+          } else {
+            const errorMessage = ApiEndpoints.CHECK_WORD.ERRORS.find(ERROR => ERROR.CODE === response.data)?.MESSAGE;
+            this.alertService.displayAlert({
+              type: AlertType.Error,
+              title: 'Failed To Check Guess',
+              subtitle: errorMessage ?? 'Failed To Check Guess Due To Unknown Error',
+              timeout: 7000
+            });
+          }
+        });
+    } else {
+      this.loadingScreenTitle = 'Please wait for players to submit their guesses';
+      this.apiService.sendEmojis(this.inputValue)
+        .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+        .subscribe(response => {
+          if (!response.success) {
+            const errorMessage = ApiEndpoints.SEND_EMOJIS.ERRORS.find(ERROR => ERROR.CODE === response.data)?.MESSAGE;
+            this.alertService.displayAlert({
+              type: AlertType.Error,
+              title: 'Failed To Send Emojis',
+              subtitle: errorMessage ?? 'Failed To Send Emojis Due To Unknown Error',
+              timeout: 7000
+            });
+          }
+        });
+    }
   }
 
   private listenForRoundEnd():void {
-    this.signalr.listen<string>(ApiRecieveCommands.ROUND_ENDED)
-      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe(msg => {
-        if (this.room.currentRound) this.room.currentRound += 1;
-        this.startRound();
-      });
+    // this.signalr.listen<string>(ApiEndpoints.ro)
+    //   .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+    //   .subscribe(msg => {
+    //     if (this.room.currentRound) this.room.currentRound += 1;
+    //     this.startRound();
+    //   });
   }
 
   private displayOverlay():void {
     this.overlayEnabled = true;
-    timer(5000).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+    timer(7000).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.overlayStartExitAnimation = true;
       timer(500).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
         this.overlayEnabled = false;

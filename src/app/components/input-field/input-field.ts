@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ComponentIcon, ComponentIconPosition, InputFieldColor } from '../../../definitions';
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-input-field',
-  imports: [NgClass],
+  imports: [],
   templateUrl: './input-field.html',
   styleUrl: './input-field.scss'
 })
@@ -14,6 +13,7 @@ export class InputField {
   @Input() placeholder: string | null = null;
   @Input() value: string | null = null;
   @Input() icons: ComponentIcon[] = [];
+  @Input() type: string = 'text';
   @Input() required: boolean = false;
   @Input() disabled: boolean = false;
   @Input() lineHeight: number = 21;
@@ -23,6 +23,7 @@ export class InputField {
   @Input() inputClass: string = '';
   @Output() onValueChange: EventEmitter<string> = new EventEmitter<string>();
 
+  public focused: boolean = false;
   public leftSideIcons: ComponentIcon[] = [];
   public rightSideIcons: ComponentIcon[] = [];
 

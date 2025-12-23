@@ -2,8 +2,8 @@ import { Routes } from '@angular/router';
 import { HomePage } from './pages/home-page/home-page';
 import { CategoriesPage } from './pages/categories-page/categories-page';
 import { WaitingRoomPage } from './pages/waiting-room-page/waiting-room-page';
-import { Playground } from './playground/playground';
 import { GameRoomPage } from './pages/game-room-page/game-room-page';
+import { Playground } from './playground/playground';
 
 export const routes: Routes = [
     {

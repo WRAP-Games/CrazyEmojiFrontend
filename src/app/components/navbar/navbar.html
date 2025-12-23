@@ -16,7 +16,10 @@
                     <i class="navbar-btn-icon fa-solid fa-gear"></i>
                 </div>
             </div>
-            <app-user-profile-img [user]="currentUser" [size]="45" [showOnlineStatus]="false"></app-user-profile-img>
+            <app-user-profile-img
+                [user]="authenticationService.currentUser"
+                [size]="45">
+            </app-user-profile-img>
         </div>
     </div>
 }

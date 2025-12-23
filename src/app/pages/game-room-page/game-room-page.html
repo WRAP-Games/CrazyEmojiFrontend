@@ -1,84 +1,68 @@
-<div class="game-container">
-    @if (loadingScreenTitle.length) {
-        <div class="game-loading-container">
-            <span class="game-loading-container-title">{{ loadingScreenTitle }}</span>
-            <ngx-loading-bar
-                class="game-loading-container-spinner"
-                [includeBar]="false"
-                [fixed]="false"
-                [color]="'#A95562'"
-                [diameter]="'200px'">
-            </ngx-loading-bar>
-        </div>
-    }
-    @else {
-        <div class="game-content">
-            <span class="round-number-title">Round {{ room.currentRound }}/{{ room.rounds }}</span>
-            @if (roomRole === RoomRole.Commander) {
-                <div class="recieved-word-container">
-                    <span class="recieved-word-container-title-secondary">YOUR WORD IS:</span>
-                    <span class="recieved-word-container-title-primary">{{ recievedWordOrEmoji }}</span>
-                </div>
-                <div class="submit-response-container">
-                    <app-input-field
-                        [inputClass]="'game-room-submit-response-input'"
-                        [placeholder]="'Enter Emojis'"
-                        (onValueChange)="onInputFieldEnter($event)">
-                    </app-input-field>
-                    <app-button
-                        [text]="'Send'"
-                        [size]="ButtonSize.Large"
-                        [icon]="SendBtnIcon"
-                        [disabled]="inputValue.length === 0"
-                        (onClick)="submitGuess()">
-                    </app-button>
-                </div>
-            }
-            @else {
-                <div class="recieved-word-container">
-                    <span class="recieved-word-container-title-secondary">GIVEN EMOJIS ARE:</span>
-                    <span class="recieved-word-container-title-primary">{{ recievedWordOrEmoji }}</span>
-                </div>
-                <div class="submit-response-container">
-                    <app-input-field
-                        [inputClass]="'game-room-submit-response-input'"
-                        [placeholder]="'Guess the Word'"
-                        (onValueChange)="onInputFieldEnter($event)">
-                    </app-input-field>
-                    <app-button
-                        [text]="'Send'"
-                        [size]="ButtonSize.Large"
-                        [icon]="SendBtnIcon"
-                        [disabled]="inputValue.length === 0"
-                        (onClick)="submitGuess()">
-                    </app-button>
-                </div>
-            }
-        </div>
-    }
-    @if (overlayEnabled) {
-        <div class="game-container-overlay" [class.exit-animation]="overlayStartExitAnimation">
-            <div class="game-container-overlay-contents">
-                <span class="game-container-overlay-round">Round {{ room.currentRound }}/{{ room.rounds }}</span>
-                <div class="game-container-overlay-role">
-                    <span class="game-container-overlay-role-title-primary">You are the</span>
-                    @if (roomRole === RoomRole.Commander) {
-                        <span class="game-container-overlay-role-title-secondary">PICKER</span>
-                    }
-                    @else {
-                        <span class="game-container-overlay-role-title-secondary">GUESSER</span>
-                    }
-                </div>
-                <div class="game-container-overlay-tips">
-                    @if (roomRole === RoomRole.Commander) {
-                        <span class="game-container-overlay-tip">Pick emojis that represent the given word best and let other players guess it</span>
-                        <span class="game-container-overlay-tip">TIP: don’t make it too easy or difficult because you will loose points</span>
-                    }
-                    @else {
-                        <span class="game-container-overlay-tip">Guess the word based on given emojis</span>
-                    }
+@if (room) {
+    <div class="game-container">
+        @if (loadingScreenTitle.length) {
+            <div class="game-loading-container">
+                <span class="game-loading-container-title">{{ loadingScreenTitle }}</span>
+            </div>
+        }
+        @else {
+            <div class="game-content">
+                <span class="round-number-title">Round {{ room.currentRound }}/{{ room.rounds }}</span>
+                @if (roomRole === RoomRole.Commander) {
+                    <div class="recieved-word-container">
+                        <span class="recieved-word-container-title-secondary">YOUR WORD IS:</span>
+                        <span class="recieved-word-container-title-primary">{{ recievedWordOrEmoji }}</span>
+                    </div>
+                    <div class="submit-response-container">
+                        <app-input-field-emojis [placeholder]="'Enter Emojis'" (onBtnClick)="submitEmojis($event)"></app-input-field-emojis>
+                    </div>
+                }
+                @else {
+                    <div class="recieved-word-container">
+                        <span class="recieved-word-container-title-secondary">GIVEN EMOJIS ARE:</span>
+                        <span class="recieved-word-container-title-primary">{{ recievedWordOrEmoji }}</span>
+                    </div>
+                    <div class="submit-response-container">
+                        <app-input-field
+                            [inputClass]="'game-room-submit-response-input'"
+                            [placeholder]="'Guess the Word'"
+                            (onValueChange)="onInputFieldEnter($event)">
+                        </app-input-field>
+                        <app-button
+                            [text]="'Send'"
+                            [size]="ButtonSize.Large"
+                            [icon]="SendBtnIcon"
+                            [disabled]="inputValue.length === 0"
+                            (onClick)="submitGuess()">
+                        </app-button>
+                    </div>
+                }
+            </div>
+        }
+        @if (overlayEnabled) {
+            <div class="game-container-overlay" [class.exit-animation]="overlayStartExitAnimation">
+                <div class="game-container-overlay-contents">
+                    <span class="game-container-overlay-round">Round {{ room.currentRound }}/{{ room.rounds }}</span>
+                    <div class="game-container-overlay-role">
+                        <span class="game-container-overlay-role-title-primary">You are the</span>
+                        @if (roomRole === RoomRole.Commander) {
+                            <span class="game-container-overlay-role-title-secondary">PICKER</span>
+                        }
+                        @else {
+                            <span class="game-container-overlay-role-title-secondary">GUESSER</span>
+                        }
+                    </div>
+                    <div class="game-container-overlay-tips">
+                        @if (roomRole === RoomRole.Commander) {
+                            <span class="game-container-overlay-tip">Pick emojis that represent the given word best and let other players guess it</span>
+                            <span class="game-container-overlay-tip">TIP: don’t make it too easy or difficult because you will loose points</span>
+                        }
+                        @else {
+                            <span class="game-container-overlay-tip">Guess the word based on given emojis</span>
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+}

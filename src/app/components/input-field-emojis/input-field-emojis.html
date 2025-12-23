@@ -1,0 +1,48 @@
+<div
+    class="input-field-emojis-wrapper"
+    tabindex="0"
+    (focus)="emojiKeyboardVisible = true"
+    (blur)="emojiKeyboardVisible = false">
+    <div class="input-field-emojis">
+        <span
+            #emojiInput
+            class="input-field-emojis-value"
+            [class.placeholder]="!enteredEmojis.length"
+            [contentEditable]="enteredEmojis.length ? true : false"
+            spellcheck="false"
+            (keydown)="onKeyDown($event)"
+            (paste)="onPaste($event)">
+            {{ enteredEmojis.length ? enteredEmojis : 'Placeholder' }}
+        </span>
+        <app-button
+            [text]="'Send'"
+            [icon]="SendIcon"
+            [size]="ButtonSize.Large"
+            [disabled]="!enteredEmojis.length"
+            (onClick)="buttonClickHandler()">
+        </app-button>
+    </div>
+    <div class="input-field-emojis-selection">
+        <ng-scrollbar [style.width]="'100%'" [orientation]="'vertical'">
+            <div class="input-field-emojis-content">
+                @for (emojiGroup of notoColorEmojis; track emojiGroup) {
+                    <div class="input-field-emojis-group">
+                        <span class="input-field-emojis-group-name">{{ emojiGroup.group }}</span>
+                            <div class="input-field-emojis-group-elements">
+                            @for (emoji of emojiGroup.emoji; track emoji) {
+                                <div
+                                    class="input-field-emoji-element-container"
+                                    (click)="onEmojiSelect(emoji.base)">
+                                    <span class="input-field-emoji-element">
+                                        {{ getStringFromCodePoint(emoji.base) }}
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </ng-scrollbar>
+    </div>
+</div>
+

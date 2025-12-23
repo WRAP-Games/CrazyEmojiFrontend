@@ -1,0 +1,89 @@
+@use '@material/elevation' as mdc-elevation;
+
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    &::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 0;
+        opacity: .2;
+        background: url('/emojis.svg');
+    }
+}
+
+.crazy-emoji-authentication-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    width: 500px;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 25px 20px;
+    border-radius: 16px;
+    z-index: 1;
+    background: var(--crazy-emoji-background-secondary);
+    @include mdc-elevation.elevation(2);
+    .authentication-block-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+        .authentication-block-brand-icon {
+            font-size: 45px;
+            color: var(--crazy-emoji-text-primary);
+        }
+        .authentication-block-title {
+            font-family: 'Poppins';
+            font-weight: 500;
+            font-size: 26px;
+            line-height: 30px;
+            text-align: center;
+            color: var(--crazy-emoji-text-primary);
+        }
+    }
+    .authentication-block-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+    .authentication-block-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        .authentication-block-switch-methods {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            .authentication-block-switch-methods-text {
+                font-family: 'Poppins';
+                font-weight: 500;
+                font-size: 14px;
+                &.primary {
+                    color: var(--crazy-emoji-text-primary);
+                }
+                &.secondary {
+                    cursor: pointer;
+                    color: var(--crazy-emoji-text-secondary);
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    }
+}

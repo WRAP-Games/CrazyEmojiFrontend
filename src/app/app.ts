@@ -2,31 +2,24 @@ import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { environment } from '../environment';
 import { SidebarNavigation } from "./components/sidebar-navigation/sidebar-navigation";
-import { SidebarFriends } from "./components/sidebar-friends/sidebar-friends";
 import { NgxLoadingBar } from '@ngx-loading-bar/core';
 import { Navbar } from "./components/navbar/navbar";
 import { NavbarService } from './services/navbar-service';
-import { AlertI, AlertType, NavbarContentColor } from '../definitions';
-import { filter, take } from 'rxjs';
-import { currentUser, users } from '../testData';
-import { ApiRecieveCommands, ApiSendCommands } from '../apiEndpoints';
-import { AlertService } from './services/alert-service';
-import { Signalr } from './services/signalr';
+import { NavbarContentColor } from '../definitions';
+import { filter } from 'rxjs';
+import { Authentication } from './services/authentication';
+import { AuthenticationPage } from "./pages/authentication-page/authentication-page";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SidebarNavigation, SidebarFriends, NgxLoadingBar, Navbar],
+  imports: [RouterOutlet, SidebarNavigation, NgxLoadingBar, Navbar, AuthenticationPage],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
   private router = inject(Router);
   private navbarService: NavbarService = inject(NavbarService);
-  private signalr: Signalr = inject(Signalr);
-  private alertService: AlertService = inject(AlertService);
-
-  readonly users = users;
-  readonly currentUser = currentUser;
+  authenticationService: Authentication = inject(Authentication);
 
   constructor() {
     this.router.events.pipe(
@@ -40,17 +33,17 @@ export class App {
 
   ngOnInit() {
     this.setNavbarTitle();
-    this.subscribeToErrors();
   }
 
   private setNavbarTitle():void {
+    if (!this.authenticationService.currentUserLoggedIn) return;
     this.navbarService.setNavbarConent([
       {
         content: this.getWelcomeMessage() + ',',
         color: NavbarContentColor.Secondary
       },
       {
-        content: this.currentUser.firstName,
+        content: this.authenticationService.currentUser.username,
         color: NavbarContentColor.Primary
       }
     ]);
@@ -66,19 +59,5 @@ export class App {
       }
     }
     return message;
-  }
-
-  private subscribeToErrors():void {
-    this.signalr.listen<string>(ApiRecieveCommands.ERROR)
-      .pipe(take(1))
-      .subscribe(error => {
-        const alert: AlertI = {
-          type: AlertType.Error,
-          title: 'Error',
-          subtitle: error,
-          timeout: 10000
-        };
-        this.alertService.displayAlert(alert);
-      });
   }
 }

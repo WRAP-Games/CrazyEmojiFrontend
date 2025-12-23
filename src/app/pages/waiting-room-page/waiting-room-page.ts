@@ -2,16 +2,18 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { NavbarService } from '../../services/navbar-service';
 import { RoomService } from '../../services/room-service';
 import { Button } from "../../components/button/button";
-import { AlertI, AlertType, ButtonSize, ComponentIcon, ComponentIconPosition, Room, User } from '../../../definitions';
+import { AlertType, ButtonSize, ComponentIcon, ComponentIconPosition, Room } from '../../../definitions';
 import { UserBadge } from "../../components/user-badge/user-badge";
-import { currentUser, users } from '../../../testData';
-import { interval, take } from 'rxjs';
+import { take } from 'rxjs';
 import { NgScrollbar } from "ngx-scrollbar";
 import { Router } from '@angular/router';
-import { AlertService } from '../../services/alert-service';
 import { Signalr } from '../../services/signalr';
-import { ApiRecieveCommands, ApiSendCommands } from '../../../apiEndpoints';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ApiEndpoints } from '../../../apiEndpoints';
+import { Authentication } from '../../services/authentication';
+import { UserService } from '../../services/user-service';
+import { AlertService } from '../../services/alert-service';
+import { ApiService } from '../../services/api-service';
 
 @Component({
   selector: 'app-waiting-room-page',
@@ -21,63 +23,98 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class WaitingRoomPage {
   private navbarService: NavbarService = inject(NavbarService);
-  private alertService: AlertService = inject(AlertService);
   private signalr = inject(Signalr);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   private roomService: RoomService = inject(RoomService);
+  private userService: UserService = inject(UserService);
+  private alertService: AlertService = inject(AlertService);
+  private apiService: ApiService = inject(ApiService);
   
-  readonly CurrentUser = currentUser;
+  private gameStarted: boolean = false;
+
   readonly ButtonSize = ButtonSize;
   readonly playIconLeft: ComponentIcon = {
     icon: 'fa-solid fa-circle-play',
     position: ComponentIconPosition.Left
   }
-  readonly RoomNotFoundAlert: AlertI = {
-    type: AlertType.Error,
-    title: 'Room Not Found',
-    subtitle: 'Room Not Found'
-  };
 
   room!: Room;
+  authenticationService: Authentication = inject(Authentication);
 
   ngOnInit() {
     if (!this.roomService.currentRoom) {
-      this.alertService.displayAlert(this.RoomNotFoundAlert);
       this.router.navigate(['/']);
       return;
     }
     this.room = this.roomService.currentRoom;
     this.navbarService.disableNavbar();
-    this.populateUsers();
     this.listenToGameStart();
+    this.listenToGameEnd();
+    this.listenToPlayersActivity();
+  }
+
+  ngOnDestroy() {
+    if (this.gameStarted) return;
+    this.roomService.leaveRoom();
   }
 
   startGame():void {
-    if (this.room.creator !== currentUser) return;
-    this.signalr.sendMessage(ApiSendCommands.START_GAME);
-  }
-
-  removeJoinedUser(user: User):void {
-    if (this.room.creator !== currentUser) return;
-    const userIndex = this.room.joinedUsers.findIndex(joinedUser => joinedUser === user);
-    if (userIndex !== undefined && userIndex !== -1) this.room.joinedUsers.splice(userIndex, 1);
-  }
-
-  private populateUsers():void {
-    let lastJoinedUserIndex = 0;
-    interval(3000).pipe(take(users.length)).subscribe(() => {
-      this.room.joinedUsers.push(users[lastJoinedUserIndex]);
-      lastJoinedUserIndex++;
-    });
+    if (this.room.creator !== this.authenticationService.currentUser) return;
+    this.apiService.startGame()
+      .pipe(take(1))
+      .subscribe(response => {
+        if (!response.success) {
+          const errorMessage = ApiEndpoints.START_GAME.ERRORS.find(ERROR => ERROR.CODE === response.data)?.MESSAGE;
+          this.alertService.displayAlert({
+            type: AlertType.Error,
+            title: 'Failed To Start The Game',
+            subtitle: errorMessage ?? 'Failed To Start The Game Due To Unknown Error',
+            timeout: 7000
+          });
+        }
+      });
   }
 
   private listenToGameStart():void {
-    this.signalr.listen<string>(ApiRecieveCommands.GAME_STARTED)
+    this.signalr.listen<void>(ApiEndpoints.START_GAME.RECIEVE)
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe(pinCode => {
+      .subscribe(() => {
+        this.gameStarted = true;
         this.room.currentRound = 1;
         this.router.navigate(['/room/game-room']);
+      });
+  }
+
+  private listenToGameEnd():void {
+    this.signalr.listen<void>(ApiEndpoints.GAME_ENDED.RECIEVE)
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.alertService.displayAlert({
+          type: AlertType.Warning,
+          title: 'Room Closed',
+          subtitle: 'The game has ended because the room creator left the room.',
+          timeout: 7000
+        });
+        this.roomService.leaveRoom();
+        this.router.navigate(['/']);
+      });
+  }
+
+  private listenToPlayersActivity():void {
+    this.signalr.listen<string>(ApiEndpoints.PLAYER_LEFT.RECIEVE)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(username => {
+        const userIndex = this.room.joinedUsers.findIndex(user => user.username === username);
+        if (userIndex !== -1) this.room.joinedUsers.splice(userIndex, 1);
+      });
+    
+    this.signalr.listen<string>(ApiEndpoints.PLAYER_JOINED.RECIEVE)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(username => {
+        if (!this.room.joinedUsers.some(user => user.username === username)) {
+          this.room.joinedUsers.push(this.userService.getOrCreateUser(username));
+        }
       });
   }
 }

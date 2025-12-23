@@ -1,17 +1,28 @@
 <div class="crazy-emoji-master">
-  <div class="crazy-emoji-sidebar">
-    <app-sidebar-navigation></app-sidebar-navigation>
-    <app-sidebar-friends [users]="users"></app-sidebar-friends>
-  </div>
-  <div class="crazy-emoji-main">
-    <ngx-loading-bar
-      [color]="'#B73A3B'"
-      [includeSpinner]="false"
-      [height]="'10px'">
-    </ngx-loading-bar>
-    <app-navbar></app-navbar>
-    <div class="crazy-emoji-main-content">
-      <router-outlet></router-outlet>
+  @if (!authenticationService.currentUserLoggedIn) {
+    <app-authentication-page></app-authentication-page>
+  }
+  @else {
+    <div class="crazy-emoji-sidebar">
+      <app-sidebar-navigation></app-sidebar-navigation>
+      <div class="crazy-emoji-sidebar-logout">
+        <div
+          class="crazy-emoji-sidebar-logout-btn"
+          (click)="authenticationService.logout()">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </div>
+      </div>
     </div>
-  </div>
+    <div class="crazy-emoji-main">
+      <ngx-loading-bar
+        [color]="'#B73A3B'"
+        [includeSpinner]="false"
+        [height]="'10px'">
+      </ngx-loading-bar>
+      <app-navbar></app-navbar>
+      <div class="crazy-emoji-main-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  }
 </div>

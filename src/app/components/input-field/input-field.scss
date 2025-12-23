@@ -44,7 +44,7 @@
             &:hover {
                 background: #775254;
             }
-            &:focus, &:focus-visible {
+            &.focused {
                 outline: 2px solid #8E6568;
                 outline-offset: 3px;
             }
@@ -54,7 +54,7 @@
             &:hover {
                 background: #552228;
             }
-            &:focus, &:focus-visible {
+            &.focused {
                 outline: 2px solid #61272D;
                 outline-offset: 3px;
             }
@@ -75,6 +75,13 @@
             }
             &::placeholder {
                 color: var(--crazy-emoji-text-primary);
+            }
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover,
+            &:-webkit-autofill:focus,
+            &:-webkit-autofill:active {
+                -webkit-text-fill-color: var(--crazy-emoji-text-primary) !important;
+                transition: background-color 5000s ease-in-out 0s;
             }
         }
         .crazy-emoji-input-field-icons {

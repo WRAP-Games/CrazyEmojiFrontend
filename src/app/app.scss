@@ -11,8 +11,30 @@
     .crazy-emoji-sidebar {
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
         gap: 20px;
         height: 100%;
+        .crazy-emoji-sidebar-logout {
+            display: flex;
+            justify-content: center;
+            padding: 31px 22px;
+            border-radius: 25px;
+            background: var(--crazy-emoji-background-secondary);
+            .crazy-emoji-sidebar-logout-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 26px;
+                height: 22px;
+                font-size: 20px;
+                color: var(--crazy-emoji-text-primary);
+                transition: color .1s ease-in-out;
+                cursor: pointer;
+                &:hover {
+                    color: var(--crazy-emoji-btn-primary-background);
+                }
+            }
+        }
     }
     .crazy-emoji-main {
         display: flex;

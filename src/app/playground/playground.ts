@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { InputFieldEmojis } from "../components/input-field-emojis/input-field-emojis";
 
 @Component({
   selector: 'app-playground',
-  imports: [],
+  imports: [InputFieldEmojis],
   templateUrl: './playground.html',
   styleUrl: './playground.scss'
 })

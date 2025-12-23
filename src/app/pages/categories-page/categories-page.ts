@@ -3,7 +3,7 @@ import { Category, NavbarContentColor } from '../../../definitions';
 import { CategoryWidget } from "../../components/category-widget/category-widget";
 import { NavbarService } from '../../services/navbar-service';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-import { categories } from '../../../testData';
+import { environment } from '../../../environment';
 
 @Component({
   selector: 'app-categories-page',
@@ -13,7 +13,7 @@ import { categories } from '../../../testData';
 })
 export class CategoriesPage {
   private navbarService: NavbarService = inject(NavbarService);
-  categories: Category[] = categories;
+  categories: Category[] = environment.categories;
 
   ngOnInit() {
     this.navbarService.setNavbarConent([

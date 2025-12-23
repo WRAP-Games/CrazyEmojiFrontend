@@ -39,31 +39,6 @@
                         </app-number-selector>
                     </div>
                 </div>
-                <div class="invite-friends-block">
-                    <span class="invite-friends-block-title">Invite Friends</span>
-                    <ng-scrollbar class="invite-friends-block-content-wrapper" [orientation]="'vertical'">
-                        <div class="invite-friends-block-content">
-                            @for (invitableUser of invitableUsers; track invitableUser) {
-                                <div class="user-invitation">
-                                    <div class="user-invitation-info">
-                                        <app-user-profile-img [user]="invitableUser.user" [size]="39"></app-user-profile-img>
-                                        <span class="user-invitation-info-name">
-                                            {{invitableUser.user.firstName}} {{ invitableUser.user.lastName }}
-                                        </span>
-                                    </div>
-                                    <app-button
-                                        [text]="invitableUser.invited ? 'Invitation Sent' : 'Send Invite'"
-                                        [size]="ButtonSize.Small"
-                                        [icon]="sendInviteBtnIcon"
-                                        [disabled]="invitableUser.invited"
-                                        (onClick)="inviteUser(invitableUser)">
-                                    </app-button>
-                                </div>
-                            }
-                            
-                        </div>
-                    </ng-scrollbar>
-                </div>
                 <div class="footer-block">
                     <app-button [text]="'Create Room'" (onClick)="createRoom()"></app-button>
                 </div>

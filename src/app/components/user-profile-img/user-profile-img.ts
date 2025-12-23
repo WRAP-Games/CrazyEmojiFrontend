@@ -10,5 +10,4 @@ import { User } from '../../../definitions';
 export class UserProfileImg {
   @Input({ required: true }) user!: User;
   @Input({ required: true }) size!: number;
-  @Input() showOnlineStatus: boolean = true;
 }

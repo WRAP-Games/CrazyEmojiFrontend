@@ -17,6 +17,7 @@
     "@angular/forms": "^20.0.0",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "@ctrl/ngx-emoji-mart": "^9.3.0",
     "@material/elevation": "^14.0.0",
     "@microsoft/signalr": "^9.0.6",
     "@ngx-loading-bar/core": "^7.0.0",
