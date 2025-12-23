@@ -4,19 +4,20 @@ import { AlertService } from '../../services/alert-service';
 import { Signalr } from '../../services/signalr';
 import { Router } from '@angular/router';
 import { RoomService } from '../../services/room-service';
-import { AlertI, AlertType, ButtonSize, ComponentIcon, ComponentIconPosition, Room, RoomRole } from '../../../definitions';
-import { Subscription, take, timer } from 'rxjs';
+import { AlertType, ButtonSize, ComponentIcon, ComponentIconPosition, Room, RoomRole } from '../../../definitions';
+import { take, timer } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { InputField } from "../../components/input-field/input-field";
 import { Button } from "../../components/button/button";
-import { ApiEndpoints } from '../../../apiEndpoints';
+import { ApiEndpoints, RoundResultsPayload } from '../../../apiEndpoints';
 import { InputFieldEmojis } from "../../components/input-field-emojis/input-field-emojis";
 import { ApiService } from '../../services/api-service';
 import { Authentication } from '../../services/authentication';
+import { NgScrollbar } from "ngx-scrollbar";
 
 @Component({
   selector: 'app-game-room-page',
-  imports: [InputField, Button, InputFieldEmojis],
+  imports: [InputField, Button, InputFieldEmojis, NgScrollbar],
   templateUrl: './game-room-page.html',
   styleUrl: './game-room-page.scss'
 })
@@ -42,18 +43,18 @@ export class GameRoomPage {
   inputValue: string = '';
   recievedWordOrEmoji?: string;
   loadingScreenTitle: string = '';
+  showTimer: boolean = false;
+  roundResults?: RoundResultsPayload[];
 
   overlayEnabled: boolean = false;
   overlayStartExitAnimation: boolean = false;
 
   ngOnInit() {
-    console.log('roomService.currentRoom', this.roomService.currentRoom);
     if (!this.roomService.currentRoom) {
       this.router.navigate(['/']);
       return;
     }
     this.room = this.roomService.currentRoom;
-    console.log('room', this.room);
     this.navbarService.disableNavbar();
     this.startRound();
   }
@@ -66,9 +67,9 @@ export class GameRoomPage {
     this.inputValue = '';
     this.roomRole = undefined;
     this.recievedWordOrEmoji = undefined;
+    this.roundResults = undefined;
     this.loadingScreenTitle = 'Please wait for the round to start';
     this.getRoundCommander();
-    this.listenForRoundEnd();
   }
 
   private getRoundCommander():void {
@@ -99,12 +100,6 @@ export class GameRoomPage {
   }
 
   private listenForWord():void {
-    /////////////////////////////////
-    this.recievedWordOrEmoji = 'Movies';
-    this.loadingScreenTitle = '';
-    return;
-    /////////////////////////////////
-
     this.apiService.getWord()
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe(response => {
@@ -129,10 +124,12 @@ export class GameRoomPage {
       .subscribe(emojis => {
         this.recievedWordOrEmoji = emojis;
         this.loadingScreenTitle = '';
+        this.getResultsWithTimer();
       });
   }
 
-  onInputFieldEnter(value: string):void {
+  onInputFieldEnter(event: Event):void {
+    const value = (event.target as HTMLInputElement).value;
     this.inputValue = value;
   }
 
@@ -145,6 +142,7 @@ export class GameRoomPage {
     if (this.roomRole === undefined || !this.inputValue.length) return;
     if (this.roomRole === RoomRole.Guesser) {
       this.loadingScreenTitle = 'Please wait for all players to submit their guesses';
+      console.log('this.inputValue', this.inputValue);
       this.apiService.checkWord(this.inputValue)
         .pipe(take(1), takeUntilDestroyed(this.destroyRef))
         .subscribe(response => {
@@ -173,18 +171,57 @@ export class GameRoomPage {
               subtitle: errorMessage ?? 'Failed To Send Emojis Due To Unknown Error',
               timeout: 7000
             });
+          } else {
+            this.getResultsWithTimer();
           }
         });
     }
   }
 
-  private listenForRoundEnd():void {
-    // this.signalr.listen<string>(ApiEndpoints.ro)
-    //   .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-    //   .subscribe(msg => {
-    //     if (this.room.currentRound) this.room.currentRound += 1;
-    //     this.startRound();
-    //   });
+  private getResultsWithTimer():void {
+    const timerDuration = this.room.roundDuration * 1000;
+    this.showTimer = true;
+    timer(timerDuration).subscribe(() => {
+      this.showTimer = false;
+      this.getRoundResults();
+      this.listenForRoundStart();
+    });
+  }
+
+  private getRoundResults():void {
+    this.apiService.getResults()
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe(response => {
+        if (response.success) {
+          this.roundResults = response.data;
+          this.loadingScreenTitle = '';
+        } else {
+          const errorMessage = ApiEndpoints.GET_RESULTS.ERRORS.find(ERROR => ERROR.CODE === response.data)?.MESSAGE;
+          this.alertService.displayAlert({
+            type: AlertType.Error,
+            title: 'Failed To Get Round Results',
+            subtitle: errorMessage ?? 'Failed To Get Round Results Due To Unknown Error',
+            timeout: 7000
+          });
+        }
+        if (this.room.currentRound === this.room.rounds) {
+          timer(10000)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+              this.roomService.leaveRoom();
+              this.router.navigate(['/']);
+            });
+        }
+      });
+  }
+
+  private listenForRoundStart():void {
+    this.signalr.listen<string>(ApiEndpoints.ROUND_STARTED.RECIEVE)
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe(msg => {
+        if (this.room.currentRound) this.room.currentRound += 1;
+        this.startRound();
+      });
   }
 
   private displayOverlay():void {

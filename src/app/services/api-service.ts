@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Signalr } from './signalr';
 import { Observable, Subscription, take } from 'rxjs';
-import { ApiEndpoints, CurrentUserDataPayload, JoinedRoomPayload } from '../../apiEndpoints';
+import { ApiEndpoints, CurrentUserDataPayload, JoinedRoomPayload, RoundResultsPayload } from '../../apiEndpoints';
 import { Category, User } from '../../definitions';
 import { UserService } from './user-service';
 
@@ -177,7 +177,7 @@ export class ApiService {
           subscriber.complete();
         });
       
-      this.signalr.sendMessage(ApiEndpoints.CHECK_WORD.SEND);
+      this.signalr.sendMessage(ApiEndpoints.CHECK_WORD.SEND, word);
     });
   }
 
@@ -202,6 +202,30 @@ export class ApiService {
         });
       
       this.signalr.sendMessage(ApiEndpoints.SEND_EMOJIS.SEND, emojis);
+    });
+  }
+
+  getResults():Observable<{ success: true; data: RoundResultsPayload[] } | { success: false; data: string }> {
+    return new Observable(subscriber => {
+      let successSub: Subscription | undefined = undefined;
+
+      const errorSub = this.signalr.listenToError(ApiEndpoints.GET_RESULTS.SEND)
+        .pipe(take(1))
+        .subscribe(errorCode => {
+          subscriber.next({ success: false, data: errorCode });
+          successSub?.unsubscribe();
+          subscriber.complete();
+        });
+      
+      successSub = this.signalr.listen<RoundResultsPayload[]>(ApiEndpoints.GET_RESULTS.RECIEVE)
+        .pipe(take(1))
+        .subscribe((results) => {
+          subscriber.next({ success: true, data: results });
+          errorSub.unsubscribe();
+          subscriber.complete();
+        });
+      
+      this.signalr.sendMessage(ApiEndpoints.GET_RESULTS.SEND);
     });
   }
 }

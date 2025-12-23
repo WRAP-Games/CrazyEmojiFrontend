@@ -12,6 +12,13 @@ export interface JoinedRoomPayload {
     players: string[]
 };
 
+export interface RoundResultsPayload {
+    username: string,
+    guessedWord: string,
+    guessedRight: boolean,
+    gameScore: number
+};
+
 export const ApiEndpoints = {
     SIGN_UP: {
         SEND: "createUser",
@@ -152,7 +159,7 @@ export const ApiEndpoints = {
     },
     GET_WORD: {
         SEND: "getWord",
-        RECIEVE: "recievedWord",
+        RECIEVE: "recivedWord",
         ERRORS: [
             {
                 CODE: "FORBIDDEN",
@@ -181,7 +188,7 @@ export const ApiEndpoints = {
         ]
     },
     GET_RESULTS: {
-        SEND: "getResuts",
+        SEND: "getResults",
         RECIEVE: "roundEnded",
         ERRORS: [
             {

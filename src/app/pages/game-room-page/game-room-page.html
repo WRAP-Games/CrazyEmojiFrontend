@@ -1,8 +1,41 @@
 @if (room) {
     <div class="game-container">
+        @if (showTimer) {
+            <div class="game-timer">
+                <div class="game-timer-filled" [style.--timer-duration.s]="room.roundDuration"></div>
+            </div>
+        }
         @if (loadingScreenTitle.length) {
             <div class="game-loading-container">
                 <span class="game-loading-container-title">{{ loadingScreenTitle }}</span>
+            </div>
+        }
+        @else if (roundResults) {
+            <div class="game-round-results">
+                <span class="game-round-results-header">Round {{ room.currentRound }}/{{ room.rounds }}</span>
+                <span class="game-round-results-title">Scoreboard</span>
+                <div class="game-round-results-scoreboard">
+                    <ng-scrollbar [orientation]="'vertical'" [style.width]="'100%'">
+                        <div class="game-round-results-scoreboard-content">
+                            @for (result of roundResults; track result) {
+                                <div class="game-round-results-scoreboard-row">
+                                    <div
+                                        class="game-round-results-scoreboard-row-place"
+                                        [class.gold]="$index === 0"
+                                        [class.silver]="$index === 1"
+                                        [class.bronze]="$index === 2">
+                                        <span class="game-round-results-scoreboard-row-place-number">{{ $index + 1 }}</span>
+                                    </div>
+                                    <span class="game-round-results-scoreboard-row-user">{{ result.username }}</span>
+                                    <span class="game-round-results-scoreboard-row-guess">{{ result.guessedWord }}</span>
+                                    <div class="game-round-results-scoreboard-row-points">
+                                        <span class="game-round-results-scoreboard-row-points-number">{{ result.gameScore }}</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </ng-scrollbar>
+                </div>
             </div>
         }
         @else {
@@ -20,19 +53,18 @@
                 @else {
                     <div class="recieved-word-container">
                         <span class="recieved-word-container-title-secondary">GIVEN EMOJIS ARE:</span>
-                        <span class="recieved-word-container-title-primary">{{ recievedWordOrEmoji }}</span>
+                        <span class="recieved-word-container-title-emojis">{{ recievedWordOrEmoji }}</span>
                     </div>
-                    <div class="submit-response-container">
-                        <app-input-field
-                            [inputClass]="'game-room-submit-response-input'"
-                            [placeholder]="'Guess the Word'"
-                            (onValueChange)="onInputFieldEnter($event)">
-                        </app-input-field>
+                    <div class="submit-word-container">
+                        <input
+                            class="submit-word-input"
+                            placeholder="Guess the Word"
+                            (input)="onInputFieldEnter($event)"/>
                         <app-button
                             [text]="'Send'"
-                            [size]="ButtonSize.Large"
                             [icon]="SendBtnIcon"
-                            [disabled]="inputValue.length === 0"
+                            [size]="ButtonSize.Large"
+                            [disabled]="!inputValue.length"
                             (onClick)="submitGuess()">
                         </app-button>
                     </div>

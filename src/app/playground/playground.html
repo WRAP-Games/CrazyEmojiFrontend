@@ -1,1 +1,26 @@
-<app-input-field-emojis></app-input-field-emojis>
+<div class="game-round-results">
+    <span class="game-round-results-header">Round 1/15</span>
+    <span class="game-round-results-title">Scoreboard</span>
+    <div class="game-round-results-scoreboard">
+        <ng-scrollbar [orientation]="'vertical'" [style.width]="'100%'">
+            <div class="game-round-results-scoreboard-content">
+                @for (result of roundResults; track result) {
+                    <div class="game-round-results-scoreboard-row">
+                        <div
+                            class="game-round-results-scoreboard-row-place"
+                            [class.gold]="$index === 0"
+                            [class.silver]="$index === 1"
+                            [class.bronze]="$index === 2">
+                            <span class="game-round-results-scoreboard-row-place-number">{{ $index + 1 }}</span>
+                        </div>
+                        <span class="game-round-results-scoreboard-row-user">{{ result.username }}</span>
+                        <span class="game-round-results-scoreboard-row-guess">{{ result.guessedWord }}</span>
+                        <div class="game-round-results-scoreboard-row-points">
+                            <span class="game-round-results-scoreboard-row-points-number">{{ result.gameScore }}</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </ng-scrollbar>
+    </div>
+</div>
